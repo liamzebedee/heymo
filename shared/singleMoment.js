@@ -37,11 +37,6 @@ const PADDING = 6;
 				padding: PADDING,
 				backgroundColor: '#999'
 			},
-			buttonRow: {
-				flex: 1,
-				flexDirection: 'row',
-				justifyContent: 'space-around'
-			},
 			buttonContainer: {
 				borderRadius: 50, 
 				borderColor: '#333', 
@@ -70,14 +65,21 @@ const PADDING = 6;
 
 
 			head: {
-				flex: 1
+				flex: 0.1,
+				flexDirection: 'row',
+				// backgroundColor: 'gray',
+				alignItems: 'center'
 			},
 			contentBody: {
-				flex: 1
+				flex: 0.7,
+				// backgroundColor: 'black'
 			},
-			foot: {
-				flex: 1
-			}
+			buttonRow: {
+				flex: .2,
+				flexDirection: 'row',
+				justifyContent: 'space-around',
+				// backgroundColor: 'blue'
+			},
 		});
 
 
@@ -87,6 +89,7 @@ class SingleMoment extends Component {
 
 		this.state = {
 			timeAgo: '2d',
+			from: 'Aymeric',
 			peopleTagged: "Aymeric, Anna, Moeuf, Liam, Rumy",
 			numReheys: 5,
 			numHearts: 4,
@@ -111,7 +114,8 @@ class SingleMoment extends Component {
 
 		const Head = (props) =>
 			<View style={styles.head}>
-				<AppText style={{ textAlign: 'center' }}>{props.timeAgo}</AppText>
+				<AppText style={{ flex: 1, justifyContent: 'flex-start', padding: 10, fontWeight: '700' }}>{props.from}</AppText>
+				<AppText style={{ flex: 1, justifyContent: 'flex-end', textAlign: 'right', padding: 10 }}><Icon name='clock-o'/> {props.timeAgo} ago</AppText>
 			</View>;
 
 		const ContentBody = (props) => {
@@ -136,10 +140,12 @@ class SingleMoment extends Component {
 				<RoundIconButton name='refresh' score={this.state.numReheys}/>
 			</View>;
 
+		
+		// <Foot {...this.state}/>
+
 		return <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-around' }}>
 				<Head {...this.state}/>
 				<ContentBody {...this.state}/>
-				<Foot {...this.state}/>
 				<Buttons/>
 			</View>;
 		}

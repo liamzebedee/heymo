@@ -5,7 +5,6 @@ import React, {
   StyleSheet,
   StatusBar,
   PixelRatio,
-  Text,
   Image,
   TouchableHighlight,
   TouchableOpacity,
@@ -19,17 +18,18 @@ import React, {
 
 import Router from 'react-native-simple-router';
 import Radio from './RadioButton';
+import {AppText} from './shared/Globals';
 var Option = Radio.Option;
 
-var Button = require('react-native-button');
 
-const PADDING = 6;
+// const FIRST_PAGE = NewMo;
+// const FIRST_PAGE = MainHome;
+const FIRST_PAGE = SingleMoment;
 
-
-
-
-import {MainHome} from './shared/MainHome.js';
+import {MainHome} from './shared/MainHome';
 import {NewMo} from './shared/NewMo';
+import {SingleMoment} from './shared/SingleMoment';
+
 
 class heymo extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class heymo extends Component {
     return (
       <Router headerStyle={styles.navbar} rightCorner={NewMoButton} firstRoute={{
         name: 'heymo!',
-        component: MainHome
+        component: FIRST_PAGE
       }}/>
     );
   }
@@ -64,18 +64,21 @@ class NewMoButton extends Component {
   createMo() {
     this.props.toRoute({
       name: "New moment",
-      component: NewMo
+      component: NewMo,
+      rightCorner: View
     });
   }
 
   render() {
+    if(this.props.disabled) return null;
+
     return <View>
       <TouchableOpacity underlayColor="transparent" onPress={this.createMo.bind(this)}>
-        <Text style={{
+        <AppText style={{
         letterSpacing: 0.5,
         color: '#333',
         fontWeight: '500',
-       }}>New mo'</Text>
+       }}>New mo'</AppText>
       </TouchableOpacity>
       </View>;
     }

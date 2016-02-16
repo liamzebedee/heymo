@@ -56,7 +56,7 @@ var ExpandingTextInput = React.createClass({
 
   render: function() {
     var passedStyle = this.props.style || {};
-    var containerStyle = {};
+    var containerStyle = this.props.containerStyle || {};
     var inputStyle = {};
     var hiddenStyle = {};
     // TODO: these don't work beause they are StyleSheet compiled ones

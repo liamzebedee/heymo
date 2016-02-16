@@ -127,7 +127,7 @@ class Option extends Component {
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={{flexDirection: 'row'}}>
           <Circle color={color} selectedColor={selectedColor} isSelected={isSelected}/>
-          <View style={{ flex: 1 }}>
+          <View style={[{ flex: 1 }, this.props.style]}>
             {children}
           </View>
         </View>
@@ -143,5 +143,4 @@ Option.propTypes = {
   selectedColor: React.PropTypes.string
 };
 
-Radio.Option = Option;
-module.exports = Radio;
+export { Radio, Option }

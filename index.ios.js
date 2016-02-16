@@ -17,18 +17,19 @@ import React, {
 } from 'react-native';
 
 import Router from 'react-native-simple-router';
-import Radio from './RadioButton';
 import {AppText} from './shared/Globals';
-var Option = Radio.Option;
 
 
 // const FIRST_PAGE = NewMo;
 // const FIRST_PAGE = MainHome;
-const FIRST_PAGE = SingleMoment;
+// const FIRST_PAGE = SingleMoment;
+const FIRST_PAGE = SelectFriends;
+// const FIRST_PAGE = NiceWritingInput;
 
 import {MainHome} from './shared/MainHome';
-import {NewMo} from './shared/NewMo';
+import {NewMo, NiceWritingInput} from './shared/NewMo';
 import {SingleMoment} from './shared/SingleMoment';
+import {SelectFriends} from './shared/SelectFriends';
 
 
 class heymo extends Component {

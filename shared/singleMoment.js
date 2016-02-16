@@ -96,7 +96,7 @@ class SingleMoment extends Component {
 			numForwards: 12,
 			contentImage: "data:image/jpeg;base64," + niceImage,
 			contentImageWidth: 100,
-			contentImageHeight: 100
+			contentImageHeight: 800
 		}
 	}
 
@@ -120,7 +120,7 @@ class SingleMoment extends Component {
 
 		const ContentBody = (props) => {
 			if(props.contentImage) {
-				return <Image source={{uri: props.contentImage }} style={[styles.contentBody, {height: self.contentImageHeight, resizeMode: 'cover'}]}/>
+				return <View style={{flex:1}} key={1}><Image source={{uri: props.contentImage }} style={[styles.contentBody, {height: self.contentImageHeight, resizeMode: 'cover'}]}/></View>
 			} else {
 				return <View style={styles.contentBody}>
 					<AppText>{props.contentText}</AppText>

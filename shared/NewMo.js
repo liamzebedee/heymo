@@ -8,22 +8,29 @@ import React, {
 } from 'react-native';
 var ExpandingTextInput = require('../ExpandingTextInput')
 var UIImagePickerManager = require('NativeModules').UIImagePickerManager;
-
 var Icon = require('react-native-vector-icons/FontAwesome');
 
+import {SelectFriends} from './SelectFriends';
+import {niceImage} from './_sampleData';
+import {showError} from './Globals';
 
 class NewMo extends Component {
   constructor(props) {
     super(props)
     this.state = {
     }
+
+    this.writeSomething = this.writeSomething.bind(this)
+    this.capture = this.capture.bind(this)
   }
 
   componentDidMount() {
   }
 
   writeSomething() {
-
+    this.props.toRoute({
+      component: NiceWritingInput
+    })
   }
   
   capture() {
@@ -35,11 +42,9 @@ class NewMo extends Component {
       cameraType: 'back', 
       mediaType: 'photo', 
       videoQuality: 'high', 
-      aspectX: 2, 
-      aspectY: 1, 
       quality: 1.0, 
       angle: 0, 
-      allowsEditing: true, 
+      allowsEditing: false, 
       noData: false, 
       storageOptions: { 
         skipBackup: true, 
@@ -48,6 +53,25 @@ class NewMo extends Component {
     };
 
     UIImagePickerManager.launchCamera(options, (response)  => {
+      var imgData;
+
+      if(response.didCancel) {
+        return;
+      }
+
+      if(response.error) {
+        if(response.error === "Cxamera not available on simulator") {
+          imgData = niceImage;
+        } else {
+          return showError(response.error)
+        }
+      }
+
+      this.props.toRoute({
+        name: "Send mo",
+        component: SelectFriends,
+        rightCorner: View
+      });
     });
   }
 
@@ -76,19 +100,22 @@ class NewMo extends Component {
         flexDirection: 'row',
         alignSelf: 'center', alignItems: 'center',justifyContent: 'center',
       }
+
+
+
     })
 
     return <View style={styles.container}>
       <View style={[styles.box]}>
-        <TouchableOpacity underlayColor="transparent" style={styles.addMedia} onPress={this.writeSomething.bind(this)}>
-          <Text style={styles.prettyButton}><Icon name='font' size={25}/> Write something</Text>
+        <TouchableOpacity style={styles.addMedia} onPress={this.writeSomething}>
+           <Text style={styles.prettyButton}><Icon name='font' size={25}/> Write something</Text>
         </TouchableOpacity>
       </View>
 
       <View style={{ flex: .1 }}><Text style={{ textAlign: 'center', fontSize: 22, fontWeight: '200' }}>— or —</Text></View>
 
       <View style={[styles.box]}>
-        <TouchableOpacity underlayColor="transparent" style={styles.addMedia} onPress={this.capture.bind(this)}>
+        <TouchableOpacity style={styles.addMedia} onPress={this.capture}>
           <Text style={styles.prettyButton}><Icon name='camera' size={25}/> Capture</Text>
         </TouchableOpacity>
       </View>
@@ -108,18 +135,21 @@ class NiceWritingInput extends Component {
   render() {
     var styles = StyleSheet.create({
       textInput: {
-        flex: 1, 
+        // flex: 1, 
         fontSize: 36,
-        flexWrap: 'wrap',
+        // flexWrap: 'wrap',
         color: "#333", 
         fontFamily: "Helvetica Neue",
-        lineHeight: 3.6
+        // lineHeight: 3,
+        // width: 100,
+        // height: 40,
       },
       textInputCtn: {
-        borderColor: '#777',
-        margin: 10,
-        borderWidth: 1,
-        padding: 10,
+        // margin: 10,
+        // // padding: 10,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // alignSelf: 'center'
       },
     })
 
@@ -130,4 +160,4 @@ class NiceWritingInput extends Component {
 }
 
 
-export { NewMo };
+export { NewMo, NiceWritingInput };

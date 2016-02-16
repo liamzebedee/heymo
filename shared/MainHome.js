@@ -6,9 +6,11 @@ import React, {
   Text,
   TouchableOpacity,
   ListView,
+  Navigator
 } from 'react-native';
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
+
 
 import {colours} from './Theme';
 import {SingleMoment} from './SingleMoment';
@@ -39,7 +41,8 @@ class MainHome extends Component {
     this.props.toRoute({
       name: "Moment",
       component: SingleMoment,
-      data: item
+      data: item,
+      // sceneConfig: Navigator.SceneConfigs.FloatFromBottomAndroid
     });
   }
 
@@ -55,8 +58,8 @@ class MainHome extends Component {
           color="black"
           size="large"/> : null;
 
-    return <View style={{ flex: 1, marginTop: 10 }}>
-      <GridView
+    return <View style={{ flex: 1 }}>
+      <GridView style={{ paddingTop: 10 }}
           items={this.state.receivedHeymos}
           itemsPerRow={3}
           renderItem={this.renderItem.bind(this)}/>

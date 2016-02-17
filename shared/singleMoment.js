@@ -10,9 +10,7 @@ import React, {
 	TextInput,
 	ScrollView,
 	CameraRollView,
-	SliderIOS,
 	View,
-	ActivityIndicatorIOS,
 	Navigator
 } from 'react-native';
 

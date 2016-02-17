@@ -2,7 +2,6 @@ import React, {
   Component,
   View,
   StyleSheet,
-  ActivityIndicatorIOS,
   Text,
   TouchableOpacity,
   ListView,
@@ -11,7 +10,7 @@ import React, {
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
 
-
+import {BackButton} from './Globals';
 import {colours} from './Theme';
 import {SingleMoment} from './SingleMoment';
 
@@ -31,18 +30,21 @@ class MainHome extends Component {
       ],
       loading: false
     };
+
+    this.viewMo = this.viewMo.bind(this)
+    this._renderItem = this._renderItem.bind(this)
   }
 
-  renderItem(item) {
-    return <Heymo key={item.heymoId} {...item} onPress={this.openItem.bind(this, item)}/>;
+  _renderItem(item) {
+    return <Heymo key={item.heymoId} {...item} onPress={this.viewMo.bind(item)}/>;
   }
 
-  openItem(item) {
+  viewMo(moment) {
     this.props.toRoute({
       name: "Moment",
       component: SingleMoment,
-      data: item,
-      // sceneConfig: Navigator.SceneConfigs.FloatFromBottomAndroid
+      rightCorner: View,
+      data: moment,
     });
   }
 
@@ -53,16 +55,16 @@ class MainHome extends Component {
       }
     });
 
-    var loading = this.state.loading ? <ActivityIndicatorIOS
-          style={[styles.centering, styles.gray, {height: 80}]}
-          color="black"
-          size="large"/> : null;
+    // var loading = this.state.loading ? <ActivityIndicatorIOS
+    //       style={[styles.centering, styles.gray, {height: 80}]}
+    //       color="black"
+    //       size="large"/> : null;
 
     return <View style={{ flex: 1 }}>
       <GridView style={{ paddingTop: 10 }}
           items={this.state.receivedHeymos}
           itemsPerRow={3}
-          renderItem={this.renderItem.bind(this)}/>
+          renderItem={this._renderItem}/>
     </View>
   }
 }
@@ -80,15 +82,23 @@ class Heymo extends Component {
         borderRadius: 100/2,
         backgroundColor: colours.blue,
 
-        borderColor: '#888',
-        borderWidth: 1,
         borderRadius: 50,
         margin: 5,
+      },
+
+      unreadMo: {
+        borderColor: colours.pink,
+        borderWidth: 10,
       }
     })
 
-    return <TouchableOpacity onPress={this.props.onPress}><View style={styles.mo}>
-    </View></TouchableOpacity>
+    var moStyles = [styles.mo];
+    if(!this.props.opened) moStyles.push(styles.unreadMo)
+
+    return <TouchableOpacity onPress={this.props.onPress}>
+      <View style={moStyles}>
+      </View>
+    </TouchableOpacity>
   }
 }
 

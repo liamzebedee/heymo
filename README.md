@@ -11,8 +11,6 @@
 
 
 
-
-
 What am I going to write?
 
 
@@ -23,3 +21,6 @@ What am I going to write?
 
 then you just remo it to other friends
 
+
+
+https://github.com/facebook/react-native/blob/f48961388e7eb58a52164f7bf9809b5af11e4f43/Libraries/CustomComponents/Navigator/NavigatorSceneConfigs.js#L458

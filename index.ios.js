@@ -13,15 +13,16 @@ import React, {
   CameraRollView,
   SliderIOS,
   View,
-  ActivityIndicatorIOS
+  ActivityIndicatorIOS,
+  Navigator
 } from 'react-native';
 
 import Router from 'react-native-simple-router';
-import {AppText} from './shared/Globals';
+import {AppText, BackButton, NewMoButton} from './shared/Globals';
 
 
-// const FIRST_PAGE = NewMo;
 // const FIRST_PAGE = MainHome;
+// const FIRST_PAGE = NewMo;
 // const FIRST_PAGE = SingleMoment;
 const FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
@@ -50,40 +51,17 @@ class heymo extends Component {
       }
     })
 
-
     return (
-      <Router headerStyle={styles.navbar} rightCorner={NewMoButton} firstRoute={{
+      <Router backButtonComponent={BackButton} headerStyle={styles.navbar} firstRoute={{
         name: 'heymo!',
-        component: FIRST_PAGE
+        component: FIRST_PAGE,
+        rightCorner: NewMoButton
       }}/>
     );
   }
 }
 
 
-class NewMoButton extends Component {
-  createMo() {
-    this.props.toRoute({
-      name: "New moment",
-      component: NewMo,
-      rightCorner: View
-    });
-  }
-
-  render() {
-    if(this.props.disabled) return null;
-
-    return <View>
-      <TouchableOpacity underlayColor="transparent" onPress={this.createMo.bind(this)}>
-        <AppText style={{
-        letterSpacing: 0.5,
-        color: '#333',
-        fontWeight: '500',
-       }}>New mo'</AppText>
-      </TouchableOpacity>
-      </View>;
-    }
-  }
 
 
 AppRegistry.registerComponent('heymo', () => heymo);

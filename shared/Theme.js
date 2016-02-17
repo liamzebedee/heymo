@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 var colours = {
-	blue: '#438AC3',
+	blue: '#5890ff',
 	red: '#D21C28',
 	pink: '#CE2880',
 	lightBlue: '#CAE6F2',

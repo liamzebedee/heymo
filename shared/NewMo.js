@@ -12,7 +12,7 @@ var Icon = require('react-native-vector-icons/FontAwesome');
 
 import {SelectFriends} from './SelectFriends';
 import {niceImage} from './_sampleData';
-import {showError} from './Globals';
+import {showError, OKButton, CancelButton} from './Globals';
 
 class NewMo extends Component {
   constructor(props) {
@@ -22,18 +22,25 @@ class NewMo extends Component {
 
     this.writeSomething = this.writeSomething.bind(this)
     this.capture = this.capture.bind(this)
+    this.sendMo = this.sendMo.bind(this)
   }
 
   componentDidMount() {
   }
 
   writeSomething() {
+    var self = this;
+
     this.props.toRoute({
-      component: NiceWritingInput
+      component: NiceWritingInput,
+      leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
+      rightCorner: () => <OKButton onPress={this.sendMo}/>
     })
   }
   
   capture() {
+    var self = this;
+
     var options = {
       title: 'Select Image', 
       cancelButtonTitle: 'Cancel',
@@ -60,18 +67,22 @@ class NewMo extends Component {
       }
 
       if(response.error) {
-        if(response.error === "Cxamera not available on simulator") {
+        if(response.error === "Camera not available on simulator") {
           imgData = niceImage;
         } else {
           return showError(response.error)
         }
       }
 
-      this.props.toRoute({
-        name: "Send mo",
-        component: SelectFriends,
-        rightCorner: View
-      });
+      this.sendMo();
+    });
+  }
+
+  sendMo() {
+    this.props.toRoute({
+      name: "Send mo'",
+      component: SelectFriends,
+      rightCorner: View
     });
   }
 
@@ -135,26 +146,16 @@ class NiceWritingInput extends Component {
   render() {
     var styles = StyleSheet.create({
       textInput: {
-        // flex: 1, 
+        flex: 1, 
         fontSize: 36,
-        // flexWrap: 'wrap',
         color: "#333", 
         fontFamily: "Helvetica Neue",
-        // lineHeight: 3,
-        // width: 100,
-        // height: 40,
-      },
-      textInputCtn: {
-        // margin: 10,
-        // // padding: 10,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // alignSelf: 'center'
+        fontWeight: '300'
       },
     })
 
-    return <View style={styles.textInputCtn}>
-      <ExpandingTextInput style={styles.textInput} onChangeText={(text) => this.setState({text})} value={this.state.text} placeholder="Type it here..."/>
+    return <View style={{ flex: 1 }}>
+      <ExpandingTextInput autoFocus={true} style={styles.textInput} onChangeText={(text) => this.setState({text})} value={this.state.text} placeholder="A quote, a joke, whatever floats your boat..."/>
     </View>;
   }
 }

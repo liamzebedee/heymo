@@ -16,6 +16,8 @@ var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 var fuzzaldrin = require('fuzzaldrin')
+import {getFriends} from './API'
+
 
 class SelectFriends extends Component {
   constructor(props) {
@@ -23,16 +25,18 @@ class SelectFriends extends Component {
     this.state = {
       optionSelected: 0,
       addFriendText: "",
-      friends: [
-        { name: "Aymeric", selected: false, id: 0 },
-        { name: "Anna", selected: false, id: 1 },
-        { name: "Chris", selected: false, id: 2 }
-      ]
+      friends: []
     }
 
     this.addFriend = this.addFriend.bind(this)
     this.onSelectFriend = this.onSelectFriend.bind(this)
     this.throwTheMo = this.throwTheMo.bind(this)
+  }
+
+  componentDidMount() {
+    this.setState({
+      friends: getFriends()
+    })
   }
 
   addFriend() {
@@ -46,8 +50,14 @@ class SelectFriends extends Component {
   }
 
   throwTheMo() {
+    var friendsToSendTo = this.state.friends.map((friend) => {
+      if(friend.selected) return friend;
+    })
+
     this.props.resetToRoute({
+      name: 'heymo!',
       component: MainHome,
+      rightCorner: NewMoButton,
       sceneConfig: Navigator.SceneConfigs.FadeAndroid
     })
   }

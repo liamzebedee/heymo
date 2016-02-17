@@ -19,8 +19,8 @@ var Icon = require('react-native-vector-icons/FontAwesome');
 import {AppText, CancelButton} from './Globals';
 import {weirdImage, niceImage} from './_sampleData';
 import {SelectFriends} from './SelectFriends'
-import Router from 'react-native-simple-router';
-
+import Router from 'react-native-simple-router'; 
+import { forwardMo, heartMo, reMo } from './API';
 
 const PADDING = 6;
 
@@ -90,6 +90,7 @@ class SingleMoment extends Component {
 		super(props)
 
 		this.state = {
+			momentId: '13123123',
 			timeAgo: '2d',
 			from: 'Aymeric',
 			peopleTagged: "Aymeric, Anna, Moeuf, Liam, Rumy",
@@ -113,7 +114,8 @@ class SingleMoment extends Component {
 			component: SelectFriends,
 			leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
 			rightCorner: View,
-     		sceneConfig: Navigator.SceneConfigs.FloatFromBottom
+     		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
+     		data: { momentId: self.state.momentId }
 		})
 	}
 
@@ -125,7 +127,7 @@ class SingleMoment extends Component {
 
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		Image.getSize(this.state.contentImage, (width, height) => {
 			console.log(height)
 			this.setState({contentImageWidth: width, contentImageHeight: height});
@@ -167,6 +169,8 @@ class SingleMoment extends Component {
 
 		
 		// <Foot {...this.state}/>
+
+		var background = '';
 
 		return <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-around' }}>
 				<Head {...this.state}/>

@@ -21,10 +21,10 @@ import Router from 'react-native-simple-router';
 import {AppText, BackButton, NewMoButton} from './shared/Globals';
 
 
-// const FIRST_PAGE = MainHome;
+const FIRST_PAGE = MainHome;
 // const FIRST_PAGE = NewMo;
 // const FIRST_PAGE = SingleMoment;
-const FIRST_PAGE = SelectFriends;
+// const FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
 
 import {MainHome} from './shared/MainHome';
@@ -36,15 +36,14 @@ import {SelectFriends} from './shared/SelectFriends';
 class heymo extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-    }
   }
 
   render() {
     var self = this;
     var styles = StyleSheet.create({
       navbar: {
-        backgroundColor: '#8B45A9'
+        backgroundColor: '#8B45A9',
+        flex: 1
       },
       container: {
         backgroundColor: '#752116'
@@ -52,16 +51,16 @@ class heymo extends Component {
     })
 
     return (
-      <Router backButtonComponent={BackButton} headerStyle={styles.navbar} firstRoute={{
-        name: 'heymo!',
-        component: FIRST_PAGE,
-        rightCorner: NewMoButton
-      }}/>
+      <Router firstRoute={{
+
+      name: 'heymo!',
+      component: FIRST_PAGE,
+      rightCorner: NewMoButton
+    
+      }} backButtonComponent={BackButton} headerStyle={styles.navbar}/>
     );
   }
 }
-
-
 
 
 AppRegistry.registerComponent('heymo', () => heymo);

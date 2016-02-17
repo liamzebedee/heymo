@@ -18,6 +18,7 @@ class NewMo extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      contentText: null
     }
 
     this.writeSomething = this.writeSomething.bind(this)
@@ -32,9 +33,9 @@ class NewMo extends Component {
     var self = this;
 
     this.props.toRoute({
-      component: NiceWritingInput,
+      component: () => <NiceWritingInput onChangeText={(text) => self.setState({ contentText: text })}/>,
       leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
-      rightCorner: () => <OKButton onPress={this.sendMo}/>
+      rightCorner: () => <OKButton onPress={() => { self.sendMo({ contentText: self.state.contentText }) }}/>
     })
   }
   
@@ -60,7 +61,11 @@ class NewMo extends Component {
     };
 
     UIImagePickerManager.launchCamera(options, (response)  => {
-      var imgData;
+      var image = {
+        data: null,
+        width: 300,
+        height: 500
+      };
 
       if(response.didCancel) {
         return;
@@ -74,15 +79,23 @@ class NewMo extends Component {
         }
       }
 
-      this.sendMo();
+      image = {
+        data: response.data,
+        width: response.width,
+        height: response.height
+      }
+
+      this.sendMo({ contentImage: image });
     });
   }
 
-  sendMo() {
+  sendMo(data) {
+    // alert(JSON.stringify(data))
     this.props.toRoute({
       name: "Send mo'",
       component: SelectFriends,
-      rightCorner: View
+      rightCorner: View,
+      data,
     });
   }
 
@@ -155,7 +168,7 @@ class NiceWritingInput extends Component {
     })
 
     return <View style={{ flex: 1 }}>
-      <ExpandingTextInput autoFocus={true} style={styles.textInput} onChangeText={(text) => this.setState({text})} value={this.state.text} placeholder="A quote, a joke, whatever floats your boat..."/>
+      <ExpandingTextInput autoFocus={true} style={styles.textInput} onChangeText={(text) => { this.setState({text}); this.props.onChangeText(text)}} value={this.state.text} placeholder="A quote, a joke, whatever floats your boat..."/>
     </View>;
   }
 }

@@ -87,7 +87,7 @@ class NewMoButton extends Component {
 class OKButton extends Component {
 	render() {
 		return <TouchableOpacity underlayColor="transparent" onPress={this.props.onPress}>
-			<Text style={navbarButtonText}>OK</Text>
+			<Text style={[navbarButtonText, { fontWeight: '700' }]}>OK</Text>
 		</TouchableOpacity>;
 	}
 }

@@ -5,7 +5,8 @@ import React, {
   Text,
   TouchableOpacity,
   ListView,
-  Navigator
+  Navigator,
+  StatusBar,
 } from 'react-native';
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
@@ -13,26 +14,24 @@ var Icon = require('react-native-vector-icons/FontAwesome');
 import {BackButton} from './Globals';
 import {colours} from './Theme';
 import {SingleMoment} from './SingleMoment';
-
+import { getHeymos } from './API';
 
 class MainHome extends Component {
   constructor(props) {
     super(props);
 
-    // var dataSrc = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    // dataSrc.cloneWithRows(
     this.state = {
-      receivedHeymos: [
-        { opened: false, locked: false, heymoId: "12312312312" },
-        { opened: true, locked: false, heymoId: "213d2131233" },
-        { opened: false, locked: true, heymoId: "63452343423" },
-        { opened: false, locked: true, heymoId: "63452343423" },
-      ],
-      loading: false
+      receivedHeymos: [],
+      loading: true
     };
 
-    this.viewMo = this.viewMo.bind(this)
     this._renderItem = this._renderItem.bind(this)
+    this.viewMo = this.viewMo.bind(this)
+  }
+
+  componentDidMount() {
+    var heymos = getHeymos()
+    this.setState({ loading: false, receivedHeymos: heymos })
   }
 
   _renderItem(item) {
@@ -55,12 +54,17 @@ class MainHome extends Component {
       }
     });
 
+    var loadingText;
+    if(this.state.loading) loadingText = <Text>Doing important loading things...</Text>;
+
     // var loading = this.state.loading ? <ActivityIndicatorIOS
     //       style={[styles.centering, styles.gray, {height: 80}]}
     //       color="black"
     //       size="large"/> : null;
 
-    return <View style={{ flex: 1 }}>
+    return <View style={{ flex: 1 }}> 
+      {loadingText}
+
       <GridView style={{ paddingTop: 10 }}
           items={this.state.receivedHeymos}
           itemsPerRow={3}
@@ -96,8 +100,7 @@ class Heymo extends Component {
     if(!this.props.opened) moStyles.push(styles.unreadMo)
 
     return <TouchableOpacity onPress={this.props.onPress}>
-      <View style={moStyles}>
-      </View>
+      <View style={moStyles}/>
     </TouchableOpacity>
   }
 }

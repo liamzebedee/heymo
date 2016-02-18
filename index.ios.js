@@ -18,7 +18,7 @@ import React, {
 } from 'react-native';
 
 import Router from 'react-native-simple-router';
-import {AppText, BackButton, NewMoButton} from './shared/Globals';
+import {AppText, BackButton, NewMoButton, ProfileButton, ProfileViewSmall} from './shared/Globals';
 
 
 const FIRST_PAGE = MainHome;
@@ -26,6 +26,7 @@ const FIRST_PAGE = MainHome;
 // const FIRST_PAGE = SingleMoment;
 // const FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
+// const FIRST_PAGE = ProfileViewSmall;
 
 import {MainHome} from './shared/MainHome';
 import {NewMo, NiceWritingInput} from './shared/NewMo';
@@ -52,11 +53,10 @@ class heymo extends Component {
 
     return (
       <Router firstRoute={{
-
-      name: 'heymo!',
-      component: FIRST_PAGE,
-      rightCorner: NewMoButton
-    
+        name: 'heymo!',
+        component: FIRST_PAGE,
+        rightCorner: NewMoButton,
+        leftCorner: ProfileButton
       }} backButtonComponent={BackButton} headerStyle={styles.navbar}/>
     );
   }

@@ -10,13 +10,13 @@ import React, {
   Navigator,
 } from 'react-native';
 import {MainHome} from './MainHome';
-import {NiceButton} from './Globals';
+import {NiceButton, NewMoButton} from './Globals';
 var Icon = require('react-native-vector-icons/FontAwesome');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 var fuzzaldrin = require('fuzzaldrin')
-import {getFriends} from './API'
+import {getFriends, getMeForSelectFriends} from './API'
 
 
 class SelectFriends extends Component {
@@ -25,7 +25,8 @@ class SelectFriends extends Component {
     this.state = {
       optionSelected: 0,
       addFriendText: "",
-      friends: []
+      friends: [],
+      sendToMeTooLolImNotAlone: false
     }
 
     this.addFriend = this.addFriend.bind(this)
@@ -35,7 +36,7 @@ class SelectFriends extends Component {
 
   componentDidMount() {
     this.setState({
-      friends: getFriends()
+      friends: [getMeForSelectFriends(), ...getFriends()]
     })
   }
 
@@ -74,6 +75,8 @@ class SelectFriends extends Component {
 
     var _debugInfo = <Text>{this.state.friends.map((friend) => { if(friend.selected) return friend.name; })}</Text>;
 
+    const friendThatIsActuallyMeLol = getMeForSelectFriends();
+
     return <View style={{ flex: 1 }}>
     	<View style={{ flex: 0.1, padding: 10, flexDirection: 'row', flexWrap: 'wrap', borderBottomWidth: 1, borderBottomColor: '#888', marginBottom: 5, alignItems: 'center' }}>
       	 <TextInput style={{ flex: 1, alignSelf: 'center', fontSize: 26, height: 30 }} onChangeText={(addFriendText) => this.setState({ addFriendText })} placeholder="add someone" autoCapitalize='none' autoCorrect={false} value={this.state.addFriendText}/>
@@ -96,5 +99,6 @@ class SelectFriends extends Component {
     </View>
   }
 }
+
 
 export { SelectFriends }

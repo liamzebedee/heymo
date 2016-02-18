@@ -11,8 +11,7 @@ import React, {
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
 
-import {BackButton} from './Globals';
-import {colours} from './Theme';
+import {colours, BackButton} from './Globals';
 import {SingleMoment} from './SingleMoment';
 import { getHeymos } from './API';
 
@@ -35,7 +34,7 @@ class MainHome extends Component {
   }
 
   _renderItem(item) {
-    return <Heymo key={item.heymoId} {...item} onPress={this.viewMo.bind(item)}/>;
+    return <Heymo key={item.id} {...item} onPress={this.viewMo.bind(item)}/>;
   }
 
   viewMo(moment) {
@@ -57,12 +56,7 @@ class MainHome extends Component {
     var loadingText;
     if(this.state.loading) loadingText = <Text>Doing important loading things...</Text>;
 
-    // var loading = this.state.loading ? <ActivityIndicatorIOS
-    //       style={[styles.centering, styles.gray, {height: 80}]}
-    //       color="black"
-    //       size="large"/> : null;
-
-    return <View style={{ flex: 1 }}> 
+    return <View style={{ flex: 1 }}>
       {loadingText}
 
       <GridView style={{ paddingTop: 10 }}

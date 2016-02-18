@@ -16,7 +16,7 @@ import React, {
 
 var Button = require('react-native-button');
 var Icon = require('react-native-vector-icons/FontAwesome');
-import {AppText, CancelButton} from './Globals';
+import {AppText, CancelButton, colours} from './Globals';
 import {weirdImage, niceImage} from './_sampleData';
 import {SelectFriends} from './SelectFriends'
 import Router from 'react-native-simple-router'; 
@@ -62,9 +62,9 @@ var styles = StyleSheet.create({
 		flex: 0.75
 	},
 
-
-
-
+	// -------------
+	// Actual layout
+	// -------------
 
 	head: {
 		flex: 0.1,
@@ -90,16 +90,9 @@ class SingleMoment extends Component {
 		super(props)
 
 		this.state = {
-			momentId: '13123123',
-			timeAgo: '2d',
-			from: 'Aymeric',
-			peopleTagged: "Aymeric, Anna, Moeuf, Liam, Rumy",
-			numReheys: 5,
-			numHearts: 4,
-			numForwards: 12,
-			contentImage: "data:image/jpeg;base64," + niceImage,
 			contentImageWidth: 100,
-			contentImageHeight: 800
+			contentImageHeight: 800,
+			...this.props
 		}
 
 		this.forwardMo = this.forwardMo.bind(this)
@@ -184,7 +177,7 @@ class SingleMoment extends Component {
 		render() {
 			return <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
 				<AppText style={{ paddingRight: 10, fontSize: 25, color: '#999' }}>{this.props.score}</AppText>
-				<TouchableOpacity style={{  }} onPress={this.props.onPress}>
+				<TouchableOpacity onPress={this.props.onPress}>
 					<Icon name={this.props.name} size={55} style={styles.button}/>
 				</TouchableOpacity>
 			</View>;		

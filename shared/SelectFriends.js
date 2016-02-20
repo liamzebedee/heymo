@@ -15,7 +15,7 @@ var Icon = require('react-native-vector-icons/FontAwesome');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
-var fuzzaldrin = require('fuzzaldrin')
+// var fuzzaldrin = require('fuzzaldrin')
 import {getFriends, getMeForSelectFriends} from './API'
 
 
@@ -54,6 +54,36 @@ class SelectFriends extends Component {
     var friendsToSendTo = this.state.friends.map((friend) => {
       if(friend.selected) return friend;
     })
+
+
+    if(this.props.momentId) {
+      // pre-existing moment
+      if(this.props.forwardMoment) {
+        API.fowardMo({
+          momentId: this.props.momentId,
+          to: friendsToSendTo 
+        })
+
+      } else if(this.props.remo) {
+        API.remo({
+          momentId: this.props.momentId,
+          to: friendsToSendTo
+        })
+      }
+
+    } else if(this.props.contentText !== null || this.props.contextImage !== null) {
+      // new moment
+      API.sendMo({
+        contentText: this.props.contentText,
+        contentImage: this.props.contentImage,
+      })
+
+    } else {
+
+      // DEBUG
+      console.log(this.props)
+      throw new Error("WTF");
+    }
 
     this.props.resetToRoute({
       name: 'heymo!',

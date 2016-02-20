@@ -73,16 +73,18 @@ class NewMo extends Component {
 
       if(response.error) {
         if(response.error === "Camera not available on simulator") {
-          imgData = niceImage;
+          image.data = niceImage;
         } else {
           return showError(response.error)
         }
       }
 
-      image = {
-        data: response.data,
-        width: response.width,
-        height: response.height
+      else {
+        image = {
+          data: response.data,
+          width: response.width,
+          height: response.height
+        }
       }
 
       this.sendMo({ contentImage: image });
@@ -90,12 +92,11 @@ class NewMo extends Component {
   }
 
   sendMo(data) {
-    // alert(JSON.stringify(data))
     this.props.toRoute({
       name: "Send mo'",
       component: SelectFriends,
       rightCorner: View,
-      data,
+      passProps: data,
     });
   }
 

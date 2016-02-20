@@ -7,11 +7,13 @@ import React, {
   ListView,
   Navigator,
   StatusBar,
+  RefreshControl,
+  ScrollView
 } from 'react-native';
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
 
-import {colours, BackButton} from './Globals';
+import {colours, BackButton,showNotification} from './Globals';
 import {SingleMoment} from './SingleMoment';
 import { getHeymos } from './API';
 
@@ -25,7 +27,6 @@ class MainHome extends Component {
     };
 
     this._renderItem = this._renderItem.bind(this)
-    this.viewMo = this.viewMo.bind(this)
   }
 
   componentDidMount() {
@@ -34,15 +35,20 @@ class MainHome extends Component {
   }
 
   _renderItem(item) {
-    return <Heymo key={item.id} {...item} onPress={this.viewMo.bind(item)}/>;
+    var self = this
+    return <Heymo key={item.id} {...item} onPress={self.viewMo.bind(self, item)}/>;
   }
 
   viewMo(moment) {
+    console.log(moment)
+    var passProps = moment;
+    passProps.momentId = moment.id;
+
     this.props.toRoute({
       name: "Moment",
       component: SingleMoment,
       rightCorner: View,
-      data: moment,
+      passProps,
     });
   }
 
@@ -56,13 +62,23 @@ class MainHome extends Component {
     var loadingText;
     if(this.state.loading) loadingText = <Text>Doing important loading things...</Text>;
 
+    var scrollView = <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={this.state.isRefreshing}
+            onRefresh={this._onRefresh}
+            tintColor="#ff0000"
+            title="Loading..."
+            colors={['#ff0000', '#00ff00', '#0000ff']}
+            progressBackgroundColor="#ffff00"/>}/>;
+
     return <View style={{ flex: 1 }}>
       {loadingText}
 
       <GridView style={{ paddingTop: 10 }}
           items={this.state.receivedHeymos}
           itemsPerRow={3}
-          renderItem={this._renderItem}/>
+          renderItem={this._renderItem}
+          renderScrollComponent={() => scrollView}/>
     </View>
   }
 }

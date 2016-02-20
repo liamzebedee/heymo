@@ -90,13 +90,15 @@ class SingleMoment extends Component {
 		super(props)
 
 		this.state = {
-			contentImageWidth: 100,
-			contentImageHeight: 800,
 			...this.props
 		}
+		/*
+		from
+		timeAgo
+		peopleTagged
+		*/
 
 		this.forwardMo = this.forwardMo.bind(this)
-		this.heartMo = this.heartMo.bind(this)
 		this.reMo = this.reMo.bind(this)
 	}
 
@@ -108,23 +110,35 @@ class SingleMoment extends Component {
 			leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
 			rightCorner: View,
      		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
-     		data: { momentId: self.state.momentId }
+     		passProps: { 
+     			forwardMoment: true, 
+     			momentId: self.props.momentId 
+     		}
 		})
 	}
 
-	heartMo() {
-
-	}
-
 	reMo() {
+		// var self = this;
+		// this.props.toRoute({
+		// 	name: 'Remo',
+		// 	component: SelectFriends,
+		// 	leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
+		// 	rightCorner: View,
+  //    		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
+  //    		passProps: {
+  //    			remo: true, 
+  //    			momentId: self.state.momentId 
+  //    		}
+		// })
+
+/*Math.random().toString(36).slice(-12);
+
+"a95eaot4vx6r"*/
 
 	}
 
 	componentWillMount() {
-		Image.getSize(this.state.contentImage, (width, height) => {
-			console.log(height)
-			this.setState({contentImageWidth: width, contentImageHeight: height});
-		});
+
 	}
 
 	render() {
@@ -140,7 +154,7 @@ class SingleMoment extends Component {
 
 		const ContentBody = (props) => {
 			if(props.contentImage) {
-				return <View style={{flex:1}} key={1}><Image source={{uri: props.contentImage }} style={[styles.contentBody, {height: self.contentImageHeight, resizeMode: 'cover'}]}/></View>
+				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+props.contentImage.data }} style={[styles.contentBody, {height: self.props.contentImage.height, resizeMode: 'cover'}]}/></View>
 			} else {
 				return <View style={styles.contentBody}>
 					<AppText>{props.contentText}</AppText>
@@ -156,13 +170,10 @@ class SingleMoment extends Component {
 		const Buttons = (props) => 
 			<View style={styles.buttonRow}>
 				<RoundIconButton name='mail-forward' score={this.state.numForwards} onPress={this.forwardMo}/>
-				<RoundIconButton name='heart' score={this.state.numHearts} onPress={this.heartMo}/>
-				<RoundIconButton name='refresh' score={this.state.numReheys} onPress={this.reMo}/>
+				<RoundIconButton name='refresh' score={this.state.numRemos} onPress={this.reMo}/>
 			</View>;
 
 		
-		// <Foot {...this.state}/>
-
 		var background = '';
 
 		return <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-around' }}>

@@ -1,40 +1,77 @@
-class Heymo {
-	// momentId: '13123123',
-	// 		timeAgo: '2d',
-	// 		from: 'Aymeric',
-	// 		peopleTagged: "Aymeric, Anna, Moeuf, Liam, Rumy",
-	// 		numReheys: 5,
-	// 		numHearts: 4,
-	// 		numForwards: 12,
-	// 		contentImage: "data:image/jpeg;base64," + niceImage,
+import {
+	AsyncStorage
+} from 'react-native';
+
+import { niceImage } from './_sampleData';
+
+const SERVER_URL = "http://0.0.0.0:3000/api";
+
+
+
+async function getUser() {
+	var user = JSON.parse(await AsyncStorage.getItem('user'));
+	return user;
 }
 
-function createAndSetUser(username, password) {
-	
-}
-
-function getUser() {
-	return {
-		username: 'liam',
-		password: '123456'
+export async function createUser({ username, password }) {
+	try {
+		let response = await apiPost('/users', { username, password }, true)
+		var data = await response.json();
+		
+		if(data.error) {
+			alert(data.error.message)
+		} else {
+			AsyncStorage.setItem('user', JSON.stringify({ username, id: data.id }))
+		}
+	} catch(err) {
+		throw err;
 	}
 }
 
+async function loginUser(username, password) {
+	try {
+		let res = await apiPost('/users/login', { username, password }, true);
+		let data = await response.json();
+		if(data.id) {
+			
+			return data.id;
+		}
+
+	} catch(err) {
+
+		throw err;
+	}
+}
+
+async function addFriend(username) {
+	var contactToAddId = 12;
+	var res = await apiPost(`/users/${id}/contacts/rel/${fk}`);
+}
+
+
+
 
 function getHeymos() {
+	// var res = await apiGet('/moments/getCurrentMos')
 	return [
-		{ opened: false, locked: false, id: "12312312312" },
-        { opened: true, locked: false, id: "213d2131233" },
-        { opened: false, locked: true, id: "63452343423" },
+		{ opened: true, locked: false, id: 123123213, contentImage: {
+			data: niceImage,
+			height: 300,
+			width: 300
+		}, 
+
+		},
+        { opened: false, locked: false, id: "213d2131233", contentText: 'hey hey' },
+        { opened: false, locked: true, id: "63452343423", contentText: 'Love is a funny thing....' },
     ];
 }
 
-function getFriends() {
-	return [
-        { name: "Aymeric", selected: false, id: 0 },
-        { name: "Anna", selected: false, id: 1 },
-        { name: "Chris", selected: false, id: 2 }
-    ];
+async function getFriends() {
+	var res = await apiGet('/users/' + userId + '/contacts')
+	let data = await response.json()
+	return data.map((friend) => {
+		return { ...friend, selected: false }
+	})
 }
 
 function getMeForSelectFriends() {
@@ -45,7 +82,7 @@ function getMeForSelectFriends() {
 	}
 }
 
-function sendMo({ sendToArray: [], moment }) {
+function sendMo({ sentTo: [], moment }) {
 
 }
 
@@ -53,16 +90,56 @@ function forwardMo({ sendToArray: [] }) {
 
 }
 
-function heartMo() {
-
-}
-
 function reMo() {
 
 }
 
-function addFriend(username) {
 
+
+
+
+
+async function getAccessToken() {
+	var token = await AsyncStorage.getItem('accessToken');
+	if(!token) {
+		await loginUser();
+		let err = await AsyncStorage.setItem('accessToken', data.id);
+		if(err) alert(err);
+	}
 }
 
-export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, heartMo, reMo, addFriend, getUser }
+async function apiGet(endpoint, params, noAuth) {
+	var headers =  {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
+    if(!noAuth) {
+    	var token = await getAccessToken()
+        headers['Authorization'] = token
+    }
+
+	return fetch(SERVER_URL + endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(params)
+    })
+}
+
+async function apiPost(endpoint, data, noAuth) {
+	var headers =  {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
+    if(!noAuth) {
+    	var token = await getAccessToken()
+        headers['Authorization'] = token
+    }
+
+	return fetch(SERVER_URL + endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    })
+}
+
+export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser }

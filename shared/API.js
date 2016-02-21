@@ -17,16 +17,55 @@ function debug_log(obj) {
 }
 
 
+
+
+async function getAccessToken() {
+	var token = null;//await AsyncStorage.getItem('accessToken')
+	if(!token) {
+		let user = await getUser()
+		var token = await loginUser({ username: user.username, password: user.password })
+		if(!token) {
+			throw new Error("Can't get token")
+		} else {
+			let err = await AsyncStorage.setItem('accessToken', token);
+			if(err) alert(err);
+			return token;
+		}
+	}
+}
+
+async function setUser({ username, id }) {
+	AsyncStorage.setItem('user', JSON.stringify({ username, id }))
+}
+async function setAccessToken(token) {
+	AsyncStorage.setItem('accessToken', token)
+}
+
 async function getUser() {
 	var user = JSON.parse(await AsyncStorage.getItem('user'));
 	return user;
 }
 
-export async function loginOrCreateUser({ username, password }) {
+
+export async function joinUser({ username, password }) {
 	try {
-		var user = await apiPost('/users', { username, password }, true)
+		var userCredentials = { username, password }
+		var user = await apiPost('/users', userCredentials, true);
+		setUser({ username: user.username, id: user.id })
+		await signInUser(userCredentials)
 	} catch(err) {
-		alert(err.message)
+		console.log(err)
+		throw err
+	}
+}
+
+export async function signInUser({ username, password }) {
+	try {
+		var response = await apiPost('/users/login', { username, password }, true);
+		setAccessToken(response.id)
+	} catch(err) {
+		console.log(err)
+		throw err
 	}
 }
 
@@ -129,21 +168,6 @@ function reMo() {
 
 
 
-async function getAccessToken() {
-	var token = null;//await AsyncStorage.getItem('accessToken')
-	if(!token) {
-		let user = await getUser()
-		var token = await loginUser({ username: user.username, password: user.password })
-		if(!token) {
-			throw new Error("Can't get token")
-		} else {
-			let err = await AsyncStorage.setItem('accessToken', token);
-			if(err) alert(err);
-			return token;
-		}
-	}
-}
-
 
 const SERVER_URL = "http://0.0.0.0:3000/api";
 
@@ -184,4 +208,4 @@ async function apiPost(endpoint, data, noAuth) {
 	return api({ endpoint, params: data, noAuth, method: 'POST' })
 }
 
-export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser, getAccessToken, loginOrCreateUser }
+export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser, getAccessToken }

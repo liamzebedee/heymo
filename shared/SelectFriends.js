@@ -18,7 +18,6 @@ import ExpandingTextInput from '../ExpandingTextInput';
 // var fuzzaldrin = require('fuzzaldrin')
 import {getFriends, getMeForSelectFriends, addFriend} from './API'
 
-
 import { createStore } from 'redux'
 import friends from './redux/reducers'
 import { addContact } from './redux/actions'

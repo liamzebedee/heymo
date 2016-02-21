@@ -13,7 +13,7 @@ import React, {
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
 
-import {colours, BackButton,showNotification} from './Globals';
+import {colours, BackButton,showNotification, NewMoButton} from './Globals';
 import {SingleMoment} from './SingleMoment';
 import { getHeymos } from './API';
 

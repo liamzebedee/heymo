@@ -25,10 +25,10 @@ var FIRST_PAGE;
 // FIRST_PAGE = MainHome;
 // FIRST_PAGE = NewMo;
 // FIRST_PAGE = SingleMoment;
-FIRST_PAGE = SelectFriends;
+// FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
 // const FIRST_PAGE = ProfileViewSmall;
-FIRST_PAGE = DebugPage;
+// FIRST_PAGE = DebugPage;
 FIRST_PAGE = ProfileViewSmall;
 
 import {MainHome} from './shared/MainHome';

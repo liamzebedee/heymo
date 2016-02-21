@@ -21,33 +21,46 @@ export async function createUser({ username, password }) {
 		if(data.error) {
 			alert(data.error.message)
 		} else {
-			AsyncStorage.setItem('user', JSON.stringify({ username, id: data.id }))
+			AsyncStorage.setItem('user', JSON.stringify({ username, password, id: data.id }))
 		}
 	} catch(err) {
 		throw err;
 	}
 }
 
-async function loginUser(username, password) {
+async function loginUser({username, password}) {
 	try {
 		let res = await apiPost('/users/login', { username, password }, true);
-		let data = await response.json();
+		let data = await res.json();
+		console.log(data)
 		if(data.id) {
-			
 			return data.id;
 		}
-
 	} catch(err) {
-
 		throw err;
 	}
 }
 
 async function addFriend(username) {
-	var contactToAddId = 12;
-	var res = await apiPost(`/users/${id}/contacts/rel/${fk}`);
+	try {
+		let res = await apiGet(`/users/`, { "where": { "username": username }})
+		var data = await response.json();
+		if(!data.error) {
+			var contact = { username, id: data.id };
+			_addFriendInBackground()
+			return contact
+		}
+	} catch(err) {
+		throw new Error(err);
+	}
 }
 
+async function _addFriendInBackground() {
+	// var contactToAddId = data.id;
+	// var ourId = await getUser().id
+	// apiPost(`/users/${ourId}/contacts/rel/${fk}`)
+// AsyncStorage.setItem('user', JSON.stringify({ username, id: data.id }))
+}
 
 
 
@@ -58,20 +71,23 @@ function getHeymos() {
 			data: niceImage,
 			height: 300,
 			width: 300
-		}, 
-
+			}, 
 		},
         { opened: false, locked: false, id: "213d2131233", contentText: 'hey hey' },
         { opened: false, locked: true, id: "63452343423", contentText: 'Love is a funny thing....' },
     ];
 }
 
+
 async function getFriends() {
-	var res = await apiGet('/users/' + userId + '/contacts')
-	let data = await response.json()
+	/*
+var res = await apiGet('/users/me/contacts')
+	let data = await res.json()
 	return data.map((friend) => {
 		return { ...friend, selected: false }
 	})
+	*/
+	return await AsyncStorage.getItem('friends') || [];
 }
 
 function getMeForSelectFriends() {
@@ -102,9 +118,16 @@ function reMo() {
 async function getAccessToken() {
 	var token = await AsyncStorage.getItem('accessToken');
 	if(!token) {
-		await loginUser();
-		let err = await AsyncStorage.setItem('accessToken', data.id);
-		if(err) alert(err);
+		let user = await getUser()
+		var token = await loginUser({ username: user.username, password: user.password });
+		if(!token) {
+			throw new Error("Can't get token")
+		} else {
+			let err = await AsyncStorage.setItem('accessToken', token);
+			if(err) alert(err);
+			return token;
+		}
+		
 	}
 }
 

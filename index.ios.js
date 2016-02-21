@@ -21,10 +21,10 @@ import Router from 'react-native-simple-router';
 import {AppText, BackButton, NewMoButton, ProfileButton, ProfileViewSmall} from './shared/Globals';
 
 
-const FIRST_PAGE = MainHome;
+// const FIRST_PAGE = MainHome;
 // const FIRST_PAGE = NewMo;
 // const FIRST_PAGE = SingleMoment;
-// const FIRST_PAGE = SelectFriends;
+const FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
 // const FIRST_PAGE = ProfileViewSmall;
 

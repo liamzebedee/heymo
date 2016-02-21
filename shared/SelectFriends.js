@@ -16,16 +16,30 @@ var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 // var fuzzaldrin = require('fuzzaldrin')
-import {getFriends, getMeForSelectFriends} from './API'
+import {getFriends, getMeForSelectFriends, addFriend} from './API'
 
+
+import { createStore } from 'redux'
+import friends from './redux/reducers'
+import { addContact } from './redux/actions'
+
+
+var FriendStore = createStore(friends)
+const mapStateToProps = (state) => {
+  return {
+    friends: state.all
+  }
+}
 
 class SelectFriends extends Component {
   constructor(props) {
     super(props);
+    FriendStore.subscribe( () => this.setState(mapStateToProps(FriendStore.getState())) )
+
     this.state = {
       optionSelected: 0,
       addFriendText: "",
-      friends: [],
+      friends: FriendStore.getState().all,
       sendToMeTooLolImNotAlone: false
     }
 
@@ -35,16 +49,33 @@ class SelectFriends extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      friends: [getMeForSelectFriends(), ...getFriends()]
-    })
+    var self = this;
+    // (async () => {
+    //   self.setState({ 
+    //     friends: self.state.friends.concat(getFriends()) 
+    //   });
+    // })()
   }
 
   addFriend() {
-    this.setState({ addFriendText: '' })
+    // [getMeForSelectFriends()]
+    
+    FriendStore.dispatch(addContact(this.state.addFriendText, 3))
+    // var self = this;
+    // (async () => {
+    //   // TODO
+    //   var friend = await addFriend(this.state.addFriendText)
+    //   if(friend) {
+    //     self.setState({ friends: this.state.friends.push(friend) })
+    //     self.setState({ addFriendText: '' })
+    //   } else {
+    //     alert('error adding friend')
+    //   }
+    // })()
   }
 
   onSelectFriend(index) {
+    FriendStore.dispatch(addContact(this.state.addFriendText, 3))
     var friends = this.state.friends;
     friends[index].selected = !friends[index].selected;
     this.setState({ friends })
@@ -54,7 +85,6 @@ class SelectFriends extends Component {
     var friendsToSendTo = this.state.friends.map((friend) => {
       if(friend.selected) return friend;
     })
-
 
     if(this.props.momentId) {
       // pre-existing moment
@@ -103,7 +133,7 @@ class SelectFriends extends Component {
       }
     })
 
-    var _debugInfo = <Text>{this.state.friends.map((friend) => { if(friend.selected) return friend.name; })}</Text>;
+    // var _debugInfo = <Text>{this.state.friends.map((friend) => { if(friend.selected) return friend.name; })}</Text>;
 
     const friendThatIsActuallyMeLol = getMeForSelectFriends();
 
@@ -117,7 +147,7 @@ class SelectFriends extends Component {
       <Radio style={{ flex: 1 }} onSelect={this.onSelectFriend}>
         {this.state.friends.map((friend) => {
           return <Option key={friend.id} color="gray" selectedColor="#008BEF" isSelected={friend.selected} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
-            <Text style={{ fontSize: 28 }}>{friend.name}</Text>
+            <Text style={{ fontSize: 28 }}>{friend.username}</Text>
           </Option>;
         })}
         </Radio>

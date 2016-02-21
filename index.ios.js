@@ -14,24 +14,29 @@ import React, {
   SliderIOS,
   View,
   ActivityIndicatorIOS,
-  Navigator
+  Navigator,
+  Text
 } from 'react-native';
 
 import Router from 'react-native-simple-router';
-import {AppText, BackButton, NewMoButton, ProfileButton, ProfileViewSmall} from './shared/Globals';
+import {AppText, BackButton, NewMoButton, ProfileButton, RegisterLoginButton} from './shared/Globals';
 
-
-// const FIRST_PAGE = MainHome;
-// const FIRST_PAGE = NewMo;
-// const FIRST_PAGE = SingleMoment;
-const FIRST_PAGE = SelectFriends;
+var FIRST_PAGE;
+// FIRST_PAGE = MainHome;
+// FIRST_PAGE = NewMo;
+// FIRST_PAGE = SingleMoment;
+FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
 // const FIRST_PAGE = ProfileViewSmall;
+FIRST_PAGE = DebugPage;
+FIRST_PAGE = ProfileViewSmall;
 
 import {MainHome} from './shared/MainHome';
 import {NewMo, NiceWritingInput} from './shared/NewMo';
 import {SingleMoment} from './shared/SingleMoment';
 import {SelectFriends} from './shared/SelectFriends';
+import ProfileViewSmall from './shared/Login';
+import DebugPage from './shared/Debug';
 
 
 class heymo extends Component {
@@ -55,8 +60,7 @@ class heymo extends Component {
       <Router firstRoute={{
         name: 'heymo!',
         component: FIRST_PAGE,
-        rightCorner: NewMoButton,
-        leftCorner: ProfileButton
+        rightCorner: RegisterLoginButton
       }} backButtonComponent={BackButton} headerStyle={styles.navbar}/>
     );
   }

@@ -23,6 +23,9 @@ import { createStore } from 'redux'
 import friends from './redux/reducers'
 import { addContact } from './redux/actions'
 
+var GiftedSpinner = require('react-native-gifted-spinner');
+
+
 
 var FriendStore = createStore(friends)
 const mapStateToProps = (state) => {
@@ -58,24 +61,19 @@ class SelectFriends extends Component {
   }
 
   addFriend() {
-    // [getMeForSelectFriends()]
-    
     FriendStore.dispatch(addContact(this.state.addFriendText, 3))
-    // var self = this;
-    // (async () => {
-    //   // TODO
-    //   var friend = await addFriend(this.state.addFriendText)
-    //   if(friend) {
-    //     self.setState({ friends: this.state.friends.push(friend) })
-    //     self.setState({ addFriendText: '' })
-    //   } else {
-    //     alert('error adding friend')
-    //   }
-    // })()
+    this.setState({ addingFriendCurrently: true })
+
+    var self = this;
+    (async () => {
+      var friend = await addFriend(self.state.addFriendText)
+      alert(friend.id)
+      // self.setState()
+      self.setState({ addFriendText: '', addingFriendCurrently: false })
+    })()
   }
 
   onSelectFriend(index) {
-    FriendStore.dispatch(addContact(this.state.addFriendText, 3))
     var friends = this.state.friends;
     friends[index].selected = !friends[index].selected;
     this.setState({ friends })
@@ -134,13 +132,23 @@ class SelectFriends extends Component {
     })
 
     // var _debugInfo = <Text>{this.state.friends.map((friend) => { if(friend.selected) return friend.name; })}</Text>;
+    var addFriendIcon = <Ionicon style={{ color: '#777' }} name="person-add" size={30}/>;
+    if(this.state.addFriendText.length > 0) {
+      addFriendIcon = 
+        <TouchableOpacity onPress={this.addFriend}>
+            <Ionicon name="person-add" size={30}/>
+        </TouchableOpacity>;
+    }
+    if(this.state.addingFriendCurrently) {
+      addFriendIcon = <GiftedSpinner/>;
+    }
 
-    const friendThatIsActuallyMeLol = getMeForSelectFriends();
 
     return <View style={{ flex: 1 }}>
     	<View style={{ flex: 0.1, padding: 10, flexDirection: 'row', flexWrap: 'wrap', borderBottomWidth: 1, borderBottomColor: '#888', marginBottom: 5, alignItems: 'center' }}>
       	 <TextInput style={{ flex: 1, alignSelf: 'center', fontSize: 26, height: 30 }} onChangeText={(addFriendText) => this.setState({ addFriendText })} placeholder="add someone" autoCapitalize='none' autoCorrect={false} value={this.state.addFriendText}/>
-         <TouchableOpacity onPress={this.addFriend}><Ionicon name="person-add" size={30}/></TouchableOpacity>
+         {addFriendIcon}
+         
     	</View>
 
       <ScrollView style={{ flex: 0.8 }}>

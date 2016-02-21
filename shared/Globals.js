@@ -14,6 +14,7 @@ import React, {
 var Ionicon = require('react-native-vector-icons/Ionicons');
 import {NewMo, NiceWritingInput} from './NewMo';
 import {getUser, createUser} from './API'
+import ProfileViewSmall from './Login';
 
 var colours = {
   blue: '#5890ff',
@@ -125,88 +126,7 @@ class ProfileButton extends Component {
   }
 }
 
-class ProfileViewSmall extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-    }
 
-    this.saveProfile = this.saveProfile.bind(this)
-    this.copyUsernameToClipboard = this.copyUsernameToClipboard.bind(this)
-  }
-
-  saveProfile() {
-    var self = this;
-    if(!this.state.userCreated) {
-      createUser({
-        username: self.state.username,
-        password: self.state.password
-      })
-    } else {
-
-    }
-    
-    this.props.toBack()
-  }
-
-  async copyUsernameToClipboard() {
-    Clipboard.setString("heymoapp:user/"+this.state.username);
-    var s = await Clipboard.getString();
-    this.setState({
-      clipboardStuff: s
-    })
-  }
-
-  componentDidMount() {
-    var self = this;
-    (async () => self.setState(await getUser()))()
-
-    this.props.setRightProps({
-      doSave: self.saveProfile
-    })
-  }
-
-  render() {
-    var styles = StyleSheet.create({
-      heading: {
-        fontWeight: '300',
-        fontSize: 28,
-        padding: 15,
-        color: colours.pink,
-      },
-      input: {
-        flex: 1,
-        height: 30,
-        margin: 15,
-        fontSize: 20
-      },
-      inputCtn: {
-        flex: 1,    
-        borderColor: 'black',
-        borderStyle: 'solid',
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderLeftWidth: 0,
-        borderRightWidth: 0
-      }
-    })
-
-    var notice = this.state.id ? null : <AppText>You haven't created a user yet</AppText>;
-
-    return <View>
-      {notice}
-      <AppText style={styles.heading}>USERNAME</AppText>
-
-      <View style={[styles.inputCtn, { flexDirection: 'row', flexWrap: 'wrap' }]}>
-        <TextInput value={this.state.username} onChangeText={(username) => this.setState({ username }) } autoCapitalize='none' autoCorrect={false} style={[styles.input, { flex: 0.9 }]}/>
-        <NiceButton style={{ flex: 0.1, alignSelf: 'center', justifyContent: 'center', margin: 10, backgroundColor: 'transparent' }} onPress={this.copyUsernameToClipboard}><Ionicon style={{ color: colours.blue }} size={28} name="clipboard"/></NiceButton>
-      </View>
-
-      <AppText style={styles.heading}>PASSWORD</AppText>
-      <View style={styles.inputCtn}><TextInput value={this.state.password} onChangeText={(password) => this.setState({ password }) } autoCapitalize='none' autoCorrect={false} style={styles.input} placeholder="enter new password"/></View>
-    </View>
-  }
-}
 
 // OK Button
 class OKButton extends Component {
@@ -233,8 +153,13 @@ class SaveButton extends Component {
   }
 }
 
-
-
+class RegisterLoginButton extends Component {
+  render() {
+    return <TouchableOpacity underlayColor="transparent" onPress={this.props.login}>
+      <Text style={navbarButtonText}>Register/Login</Text>
+    </TouchableOpacity>
+  }
+}
 
 
 // var PushNotification = require('react-native-push-notification');
@@ -284,4 +209,4 @@ class SaveButton extends Component {
 // }
 
 
-export { colours, AppText, showError, NiceButton, BackButton, NewMoButton, OKButton, CancelButton, ProfileButton, ProfileViewSmall };
+export { colours, AppText, showError, NiceButton, BackButton, NewMoButton, OKButton, CancelButton, ProfileButton, RegisterLoginButton };

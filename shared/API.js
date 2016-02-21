@@ -4,8 +4,17 @@ import {
 
 import { niceImage } from './_sampleData';
 
-const SERVER_URL = "http://0.0.0.0:3000/api";
+class HeymoError {
+	constructor(errorObj) {
+		this.details = errorObj
+		this.message = errorObj.message
+	}
+}
 
+
+function debug_log(obj) {
+	console.log(JSON.stringify(obj))
+}
 
 
 async function getUser() {
@@ -13,33 +22,40 @@ async function getUser() {
 	return user;
 }
 
-export async function createUser({ username, password }) {
+export async function loginOrCreateUser({ username, password }) {
 	try {
-		let response = await apiPost('/users', { username, password }, true)
-		var data = await response.json();
-		
-		if(data.error) {
-			alert(data.error.message)
-		} else {
-			AsyncStorage.setItem('user', JSON.stringify({ username, password, id: data.id }))
-		}
+		var user = await apiPost('/users', { username, password }, true)
 	} catch(err) {
-		throw err;
+		alert(err.message)
 	}
 }
 
-async function loginUser({username, password}) {
-	try {
-		let res = await apiPost('/users/login', { username, password }, true);
-		let data = await res.json();
-		console.log(data)
-		if(data.id) {
-			return data.id;
-		}
-	} catch(err) {
-		throw err;
-	}
-}
+// export async function createUser({ username, password }) {
+// 	try {
+// 		let response = await apiPost('/users', { username, password }, true)
+// 		var data = await response.json();
+		
+// 		if(data.error) {
+// 			alert(data.error.message)
+// 		} else {
+// 			AsyncStorage.setItem('user', JSON.stringify({ username, password, id: data.id }))
+// 		}
+// 	} catch(err) {
+// 		throw err;
+// 	}
+// }
+
+// async function loginUser({username, password}) {
+// 	try {
+// 		let res = await apiPost('/users/login', { username, password }, true);
+// 		let data = await res.json();
+// 		if(data.id) {
+// 			return data.id;
+// 		}
+// 	} catch(err) {
+// 		throw err;
+// 	}
+// }
 
 async function addFriend(username) {
 	try {
@@ -47,7 +63,7 @@ async function addFriend(username) {
 		var data = await response.json();
 		if(!data.error) {
 			var contact = { username, id: data.id };
-			_addFriendInBackground()
+			_addFriendInBackground(contact)
 			return contact
 		}
 	} catch(err) {
@@ -55,11 +71,9 @@ async function addFriend(username) {
 	}
 }
 
-async function _addFriendInBackground() {
-	// var contactToAddId = data.id;
-	// var ourId = await getUser().id
-	// apiPost(`/users/${ourId}/contacts/rel/${fk}`)
-// AsyncStorage.setItem('user', JSON.stringify({ username, id: data.id }))
+async function _addFriendInBackground(contact) {
+	var ourId = await getUser().id
+	apiPost(`/users/${ourId}/contacts/rel/${contact.id}`)
 }
 
 
@@ -92,7 +106,7 @@ var res = await apiGet('/users/me/contacts')
 
 function getMeForSelectFriends() {
 	return {
-		name: "Me",
+		username: "Me",
 		selected: false,
 		id: 123213123,
 	}
@@ -116,10 +130,10 @@ function reMo() {
 
 
 async function getAccessToken() {
-	var token = await AsyncStorage.getItem('accessToken');
+	var token = null;//await AsyncStorage.getItem('accessToken')
 	if(!token) {
 		let user = await getUser()
-		var token = await loginUser({ username: user.username, password: user.password });
+		var token = await loginUser({ username: user.username, password: user.password })
 		if(!token) {
 			throw new Error("Can't get token")
 		} else {
@@ -127,42 +141,47 @@ async function getAccessToken() {
 			if(err) alert(err);
 			return token;
 		}
+	}
+}
+
+
+const SERVER_URL = "http://0.0.0.0:3000/api";
+
+async function api({ endpoint, params, noAuth, method }) {
+	var headers =  {
+	    'Accept': 'application/json',
+	    'Content-Type': 'application/json'
+  	};
+
+    if(!noAuth) {
+    	var token = await getAccessToken()
+        headers['Authorization'] = token
+    }
+
+	try {
+		var res = await fetch(SERVER_URL + endpoint, {
+	      method: method,
+	      headers,
+	      body: JSON.stringify(params)
+	    })
+		var data = await res.json();
 		
+		if(data.error) {
+			throw new HeymoError(data.error)
+		} else {
+			return data;
+		}
+	} catch(err) {
+		throw err;
 	}
 }
 
 async function apiGet(endpoint, params, noAuth) {
-	var headers =  {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      };
-    if(!noAuth) {
-    	var token = await getAccessToken()
-        headers['Authorization'] = token
-    }
-
-	return fetch(SERVER_URL + endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(params)
-    })
+	return api(endpoint, params, noAuth, 'GET')
 }
 
 async function apiPost(endpoint, data, noAuth) {
-	var headers =  {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      };
-    if(!noAuth) {
-    	var token = await getAccessToken()
-        headers['Authorization'] = token
-    }
-
-	return fetch(SERVER_URL + endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(data)
-    })
+	return api({ endpoint, params: data, noAuth, method: 'POST' })
 }
 
-export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser }
+export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser, getAccessToken, loginOrCreateUser }

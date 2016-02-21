@@ -1,5 +1,7 @@
+import {getMeForSelectFriends} from '../API'
+
 const initialState = {
-  all: []
+  all: [getMeForSelectFriends()]
 }
 
 const friends = (state = initialState, action) => {

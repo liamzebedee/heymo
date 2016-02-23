@@ -1,4 +1,5 @@
 'use strict';
+global.___DEV___ = false;
 import React, {
   AppRegistry,
   Component,
@@ -20,6 +21,8 @@ import React, {
 
 import Router from 'react-native-simple-router';
 import {AppText, BackButton, NewMoButton, ProfileButton, RegisterLoginButton} from './shared/Globals';
+
+import { getUser } from './shared/API'
 
 var FIRST_PAGE;
 // FIRST_PAGE = MainHome;
@@ -59,8 +62,7 @@ class heymo extends Component {
     return (
       <Router firstRoute={{
         name: 'heymo!',
-        component: FIRST_PAGE,
-        rightCorner: RegisterLoginButton
+        component: FIRST_PAGE
       }} backButtonComponent={BackButton} headerStyle={styles.navbar}/>
     );
   }

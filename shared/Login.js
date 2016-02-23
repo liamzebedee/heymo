@@ -24,7 +24,7 @@ import {
   NewMoButton
 } from './Globals';
 
-import { joinUser, signInUser } from './API';
+import { joinUser, signInUser, getUser } from './API';
 
 import { MainHome } from './MainHome';
 
@@ -76,7 +76,14 @@ class ProfileViewSmall extends Component {
     var self = this;
     this.props.setRightProps({
       login: self.login
-    })
+    });
+
+    (async function() {
+      var user = await getUser();
+      if(user) {
+        self.navHome()
+      }
+    })()
   }
 
   render() {

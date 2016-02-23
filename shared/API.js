@@ -4,34 +4,13 @@ import {
 
 import { niceImage } from './_sampleData';
 
-class HeymoError {
-	constructor(errorObj) {
-		this.details = errorObj
-		this.message = errorObj.message
-	}
-}
 
-
-function debug_log(obj) {
-	console.log(JSON.stringify(obj))
-}
 
 
 
 
 async function getAccessToken() {
-	var token = null;//await AsyncStorage.getItem('accessToken')
-	if(!token) {
-		let user = await getUser()
-		var token = await loginUser({ username: user.username, password: user.password })
-		if(!token) {
-			throw new Error("Can't get token")
-		} else {
-			let err = await AsyncStorage.setItem('accessToken', token);
-			if(err) alert(err);
-			return token;
-		}
-	}
+	return await AsyncStorage.getItem('accessToken')
 }
 
 async function setUser({ username, id }) {
@@ -41,9 +20,15 @@ async function setAccessToken(token) {
 	AsyncStorage.setItem('accessToken', token)
 }
 
-async function getUser() {
+export async function getUser() {
 	var user = JSON.parse(await AsyncStorage.getItem('user'));
+
 	return user;
+}
+
+export async function logout() {
+	setUser(null)
+	setAccessToken(null)
 }
 
 
@@ -51,7 +36,7 @@ export async function joinUser({ username, password }) {
 	try {
 		var userCredentials = { username, password }
 		var user = await apiPost('/users', userCredentials, true);
-		setUser({ username: user.username, id: user.id })
+		userCredentials.id = user.id
 		await signInUser(userCredentials)
 	} catch(err) {
 		console.log(err)
@@ -59,8 +44,10 @@ export async function joinUser({ username, password }) {
 	}
 }
 
-export async function signInUser({ username, password }) {
+export async function signInUser({ username, password, id }) {
 	try {
+		setUser({ username, password, id })
+
 		var response = await apiPost('/users/login', { username, password }, true);
 		setAccessToken(response.id)
 	} catch(err) {
@@ -69,57 +56,26 @@ export async function signInUser({ username, password }) {
 	}
 }
 
-// export async function createUser({ username, password }) {
-// 	try {
-// 		let response = await apiPost('/users', { username, password }, true)
-// 		var data = await response.json();
-		
-// 		if(data.error) {
-// 			alert(data.error.message)
-// 		} else {
-// 			AsyncStorage.setItem('user', JSON.stringify({ username, password, id: data.id }))
-// 		}
-// 	} catch(err) {
-// 		throw err;
-// 	}
-// }
+async function renewToken() {
+	await signInUser(await getUser());
+}
 
-// async function loginUser({username, password}) {
-// 	try {
-// 		let res = await apiPost('/users/login', { username, password }, true);
-// 		let data = await res.json();
-// 		if(data.id) {
-// 			return data.id;
-// 		}
-// 	} catch(err) {
-// 		throw err;
-// 	}
-// }
-
-async function addFriend(username) {
+export async function getUserId(username) {
 	try {
-		let res = await apiGet(`/users/`, { "where": { "username": username }})
-		var data = await response.json();
-		if(!data.error) {
-			var contact = { username, id: data.id };
-			_addFriendInBackground(contact)
-			return contact
-		}
+		var data = await apiGet("/users/findOne", { "where": { "username": username } })
 	} catch(err) {
-		throw new Error(err);
+		if(err.details.code === 'MODEL_NOT_FOUND') {
+			throw new Error("No-one was found for that username!")
+		}
+		throw err;
 	}
-}
-
-async function _addFriendInBackground(contact) {
-	var ourId = await getUser().id
-	apiPost(`/users/${ourId}/contacts/rel/${contact.id}`)
+	return data.id
 }
 
 
 
-function getHeymos() {
-	// var res = await apiGet('/moments/getCurrentMos')
-	return [
+export async function getHeymos() {
+	var testData = [
 		{ opened: true, locked: false, id: 123123213, contentImage: {
 			data: niceImage,
 			height: 300,
@@ -129,39 +85,64 @@ function getHeymos() {
         { opened: false, locked: false, id: "213d2131233", contentText: 'hey hey' },
         { opened: false, locked: true, id: "63452343423", contentText: 'Love is a funny thing....' },
     ];
-}
+    testData = [];
 
 
-async function getFriends() {
-	/*
-var res = await apiGet('/users/me/contacts')
-	let data = await res.json()
-	return data.map((friend) => {
-		return { ...friend, selected: false }
-	})
-	*/
-	return await AsyncStorage.getItem('friends') || [];
-}
-
-function getMeForSelectFriends() {
-	return {
-		username: "Me",
-		selected: false,
-		id: 123213123,
+	try {
+		var data = await apiGet('/moments/getCurrentMos', {"include":"creatorUser"})
+		return data.mos.concat(testData)
+	} catch(err) {
+		alert(err.message)
 	}
 }
 
-function sendMo({ sentTo: [], moment }) {
+
+export async function sendMo({ momentText, momentImage, to }) {
+	var todaysDate = new Date;
+
+	var moment = {};
+	if(momentImage) {
+		moment.contentImage = momentImage;
+	} else {
+		moment.contentText = momentText;
+	}
+	moment.dateCreated = todaysDate;
+
+	// upload moment
+	try {
+		var res = await apiPost('/moments', moment);
+		var newMomentId = res.id;
+
+		// upload forward
+		var forward = {
+		  dateCreated: todaysDate,
+		  dateOfForward: todaysDate,
+		  dateReveal: todaysDate,
+		  revealInterval: "1 day",
+		  isRemo: false,
+		  momentId: newMomentId
+		};
+
+		var res = await apiPost('/fowards/createWithTo', { data: forward, relations: { to: to } })
+
+
+	} catch(err) {
+		console.log(err)
+	}
+
 
 }
 
-function forwardMo({ sendToArray: [] }) {
+// 
+
+export function remo({ momentId, to }) {
 
 }
 
-function reMo() {
+export function forwardMo({ momentId, revealInterval, to }) {
 
 }
+
 
 
 
@@ -170,42 +151,71 @@ function reMo() {
 
 
 const SERVER_URL = "http://0.0.0.0:3000/api";
+// const SERVER_URL = "http://onwikipedia.org/api";
+
+class HeymoError {
+	constructor(errorObj) {
+		this.details = errorObj
+		this.message = errorObj.message
+	}
+}
+
+function debug_log(obj) {
+	console.log(JSON.stringify(obj))
+}
 
 async function api({ endpoint, params, noAuth, method }) {
-	var headers =  {
+	var headers = {
 	    'Accept': 'application/json',
-	    'Content-Type': 'application/json'
   	};
 
     if(!noAuth) {
-    	var token = await getAccessToken()
-        headers['Authorization'] = token
+    	headers['Authorization'] = await getAccessToken();
+    }
+
+	var opts = {
+	    method: method,
+	    headers,
+    }
+
+    var url;
+
+    if(method === 'GET') {
+    	url = SERVER_URL + endpoint
+    	if(params) {
+    		url += '?filter=' + encodeURIComponent(JSON.stringify(params))
+    	}
+    } else {
+    	url = SERVER_URL + endpoint
+    	headers['Content-Type'] = 'application/json'
+	    opts.body = JSON.stringify(params)
     }
 
 	try {
-		var res = await fetch(SERVER_URL + endpoint, {
-	      method: method,
-	      headers,
-	      body: JSON.stringify(params)
-	    })
+		var res = await fetch(url, opts)
 		var data = await res.json();
 		
 		if(data.error) {
+			if(data.error.code === "AUTHORIZATION_REQUIRED") {
+				await renewToken()
+				api({ endpoint, params, noAuth, method })
+			}
+
 			throw new HeymoError(data.error)
 		} else {
 			return data;
 		}
 	} catch(err) {
+		console.log("Error invoking endpoint "+endpoint)
+		console.log(err)
 		throw err;
 	}
 }
 
 async function apiGet(endpoint, params, noAuth) {
-	return api(endpoint, params, noAuth, 'GET')
+	return api({ endpoint, params, noAuth, method: 'GET' })
 }
 
-async function apiPost(endpoint, data, noAuth) {
-	return api({ endpoint, params: data, noAuth, method: 'POST' })
+async function apiPost(endpoint, params, noAuth) {
+	return api({ endpoint, params, noAuth, method: 'POST' })
 }
-
-export { getHeymos, getFriends, getMeForSelectFriends, sendMo, forwardMo, reMo, addFriend, getUser, getAccessToken }

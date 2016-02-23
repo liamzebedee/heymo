@@ -16,7 +16,7 @@ var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 // var fuzzaldrin = require('fuzzaldrin')
-import {getFriends, getMeForSelectFriends, addFriend} from './API'
+import {getFriends, getMeForSelectFriends, getUserId, sendMo, remo, forwardMo} from './API'
 
 import { createStore } from 'redux'
 import friends from './redux/reducers'
@@ -60,15 +60,20 @@ class SelectFriends extends Component {
   }
 
   addFriend() {
-    FriendStore.dispatch(addContact(this.state.addFriendText, 3))
     this.setState({ addingFriendCurrently: true })
 
     var self = this;
     (async () => {
-      var friend = await addFriend(self.state.addFriendText)
-      alert(friend.id)
-      // self.setState()
-      self.setState({ addFriendText: '', addingFriendCurrently: false })
+      try {
+        var id = await getUserId(self.state.addFriendText)
+        FriendStore.dispatch(addContact(this.state.addFriendText, id))
+        self.setState({ addFriendText: '',  })
+      } catch(err) {
+        alert(err.message)
+      } finally {
+        self.setState({ addingFriendCurrently: false })
+      }
+
     })()
   }
 
@@ -86,13 +91,13 @@ class SelectFriends extends Component {
     if(this.props.momentId) {
       // pre-existing moment
       if(this.props.forwardMoment) {
-        API.fowardMo({
+        fowardMo({
           momentId: this.props.momentId,
           to: friendsToSendTo 
         })
 
       } else if(this.props.remo) {
-        API.remo({
+        remo({
           momentId: this.props.momentId,
           to: friendsToSendTo
         })
@@ -100,10 +105,20 @@ class SelectFriends extends Component {
 
     } else if(this.props.contentText !== null || this.props.contextImage !== null) {
       // new moment
-      API.sendMo({
-        contentText: this.props.contentText,
-        contentImage: this.props.contentImage,
-      })
+      (async () => {
+        
+        try {
+          sendMo({
+            to: friendsToSendTo,
+            contentText: this.props.contentText,
+            contentImage: this.props.contentImage,
+          })
+        } catch(err) {
+          alert(err.message)
+        }
+        
+
+      })();
 
     } else {
 

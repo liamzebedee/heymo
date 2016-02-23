@@ -9,6 +9,7 @@
     "color-thief": "^2.2.1",
     "fbemitter": "^2.0.2",
     "fuzzaldrin": "^2.1.0",
+    "moment": "^2.11.2",
     "path": "^0.12.7",
     "react-native": "^0.20.0",
     "react-native-button": "^1.4.2",
@@ -21,7 +22,8 @@
     "react-native-simple-router": "^0.6.0",
     "react-native-vector-icons": "^1.1.1",
     "react-redux": "^4.4.0",
-    "redux": "^3.3.1"
+    "redux": "^3.3.1",
+    "redux-persist": "^2.0.0-rc3"
   },
   "peerDependencies": {
     "react-native": "^0.20.0"

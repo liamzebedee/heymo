@@ -17,6 +17,15 @@ import {colours, BackButton,showNotification, NewMoButton} from './Globals';
 import {SingleMoment} from './SingleMoment';
 import { getHeymos } from './API';
 
+
+// import {AsyncStorage} from 'react-native'
+
+// import {persistStore, autoRehydrate} from 'redux-persist'
+// const store = createStore(reducer, null, autoRehydrate())
+// persistStore(store, {storage: AsyncStorage})
+
+
+
 class MainHome extends Component {
   constructor(props) {
     super(props);
@@ -26,12 +35,23 @@ class MainHome extends Component {
       loading: true
     };
 
-    this._renderItem = this._renderItem.bind(this)
+    this._renderItem = this._renderItem.bind(this);
+    this.loadHeymos = this.loadHeymos.bind(this);
   }
 
   componentDidMount() {
-    var heymos = getHeymos()
-    this.setState({ loading: false, receivedHeymos: heymos })
+    this.loadHeymos()
+  }
+
+  loadHeymos() {
+    var self = this;
+
+    this.setState({ loading: true });
+
+    (async () => {
+      var heymos = await getHeymos()
+      self.setState({ loading: false, receivedHeymos: heymos || [] })
+    })()
   }
 
   _renderItem(item) {
@@ -40,7 +60,6 @@ class MainHome extends Component {
   }
 
   viewMo(moment) {
-    console.log(moment)
     var passProps = moment;
     passProps.momentId = moment.id;
 
@@ -59,22 +78,18 @@ class MainHome extends Component {
       }
     });
 
-    var loadingText;
-    if(this.state.loading) loadingText = <Text>Doing important loading things...</Text>;
 
     var scrollView = <ScrollView refreshControl={
           <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={this._onRefresh}
+            refreshing={this.state.loading}
+            onRefresh={this.loadHeymos}
             tintColor="#ff0000"
             title="Loading..."
             colors={['#ff0000', '#00ff00', '#0000ff']}
             progressBackgroundColor="#ffff00"/>}/>;
 
-    return <View style={{ flex: 1 }}>
-      {loadingText}
-
-      <GridView style={{ paddingTop: 10 }}
+    return <View style={{ flex: 1, marginTop: 10 }}>
+      <GridView
           items={this.state.receivedHeymos}
           itemsPerRow={3}
           renderItem={this._renderItem}
@@ -101,8 +116,8 @@ class Heymo extends Component {
       },
 
       unreadMo: {
-        borderColor: colours.pink,
-        borderWidth: 10,
+        // backgroundColor: colours.pink,
+        // borderWidth: 2,
       }
     })
 

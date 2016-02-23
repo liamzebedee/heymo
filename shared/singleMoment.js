@@ -50,6 +50,9 @@ var styles = StyleSheet.create({
 		margin: 5,
 		backgroundColor: 'white'
 	},
+	contentText: {
+		fontSize: 28
+	},
 	button: {
 		flex: 1,
 		fontSize: 42,
@@ -157,7 +160,7 @@ class SingleMoment extends Component {
 				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+props.contentImage.data }} style={[styles.contentBody, {height: self.props.contentImage.height, resizeMode: 'cover'}]}/></View>
 			} else {
 				return <View style={styles.contentBody}>
-					<AppText>{props.contentText}</AppText>
+					<AppText styles={styles.contentText}>{props.contentText}</AppText>
 				</View>
 			}
 		}

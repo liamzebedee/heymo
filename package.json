@@ -6,6 +6,7 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
+    "buffer": "^4.5.0",
     "color-thief": "^2.2.1",
     "fbemitter": "^2.0.2",
     "fuzzaldrin": "^2.1.0",
@@ -23,7 +24,8 @@
     "react-native-vector-icons": "^1.1.1",
     "react-redux": "^4.4.0",
     "redux": "^3.3.1",
-    "redux-persist": "^2.0.0-rc3"
+    "redux-persist": "^2.0.0-rc3",
+    "swagger-client": "^2.1.11"
   },
   "peerDependencies": {
     "react-native": "^0.20.0"

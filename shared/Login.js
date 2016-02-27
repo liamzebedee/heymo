@@ -21,7 +21,8 @@ import {
   AppText, 
   NiceButton,
   blockUIWhileCommsWithNetwork,
-  NewMoButton
+  NewMoButton,
+  goHome
 } from './Globals';
 
 import { joinUser, signInUser, getUser } from './API';
@@ -64,12 +65,8 @@ class ProfileViewSmall extends Component {
   }
 
   navHome() {
-    this.props.resetToRoute({
-      name: 'heymo!',
-      component: MainHome,
-      rightCorner: NewMoButton,
-      sceneConfig: Navigator.SceneConfigs.PushFromRight
-    })
+    var self = this;
+    goHome({ routerObj: self });
   }
 
   componentDidMount() {
@@ -78,12 +75,14 @@ class ProfileViewSmall extends Component {
       login: self.login
     });
 
-    (async function() {
-      var user = await getUser();
-      if(user) {
-        self.navHome()
-      }
-    })()
+    if(this.props.noAutologin) {
+      (async function() {
+        var user = await getUser();
+        if(user) {
+          self.signIn()
+        }
+      })();
+    }
   }
 
   render() {
@@ -140,8 +139,8 @@ class ProfileViewSmall extends Component {
       </View>
 
       <View style={{ flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around', height: 60, margin: 10 }}>
+        flexDirection: 'row',
+        justifyContent: 'space-around', height: 60, margin: 10 }}>
         <NiceButton onPress={this.join} style={[styles.controlItem, { height: 50 }]}><AppText style={styles.text}>Join</AppText></NiceButton>
         <AppText style={[styles.controlItem, { textAlign: 'center', fontSize: 22 }]}> or </AppText>
         <NiceButton onPress={this.signIn} style={[styles.controlItem, { height: 50 }]}><AppText style={styles.text}>Sign in</AppText></NiceButton>

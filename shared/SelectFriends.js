@@ -10,7 +10,7 @@ import React, {
   Navigator,
 } from 'react-native';
 import {MainHome} from './MainHome';
-import {NiceButton, NewMoButton} from './Globals';
+import {NiceButton, NewMoButton, goHome} from './Globals';
 var Icon = require('react-native-vector-icons/FontAwesome');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
@@ -91,10 +91,14 @@ class SelectFriends extends Component {
     if(this.props.momentId) {
       // pre-existing moment
       if(this.props.forwardMoment) {
-        fowardMo({
-          momentId: this.props.momentId,
-          to: friendsToSendTo 
-        })
+        (async () => {
+          
+          await fowardMo({
+            momentId: this.props.momentId,
+            to: friendsToSendTo 
+          })
+
+        })()
 
       } else if(this.props.remo) {
         remo({
@@ -108,7 +112,7 @@ class SelectFriends extends Component {
       (async () => {
         
         try {
-          sendMo({
+          await sendMo({
             to: friendsToSendTo,
             contentText: this.props.contentText,
             contentImage: this.props.contentImage,
@@ -127,12 +131,8 @@ class SelectFriends extends Component {
       throw new Error("WTF");
     }
 
-    this.props.resetToRoute({
-      name: 'heymo!',
-      component: MainHome,
-      rightCorner: NewMoButton,
-      sceneConfig: Navigator.SceneConfigs.FadeAndroid
-    })
+    var self = this;
+    goHome({ routerObj: self });
   }
 
   render() {

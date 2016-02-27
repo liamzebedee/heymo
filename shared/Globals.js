@@ -11,10 +11,12 @@ import React, {
   TextInput,
   Clipboard
 } from 'react-native';
+var Icon = require('react-native-vector-icons/FontAwesome');
 var Ionicon = require('react-native-vector-icons/Ionicons');
 import {NewMo, NiceWritingInput} from './NewMo';
-import {getUser, createUser} from './API'
+import {getUser, createUser, logout} from './API'
 import ProfileViewSmall from './Login';
+import {MainHome} from './MainHome';
 
 var colours = {
   blue: '#5890ff',
@@ -159,6 +161,34 @@ class RegisterLoginButton extends Component {
       <Text style={navbarButtonText}>Register/Login</Text>
     </TouchableOpacity>
   }
+}
+
+class LogoutButton extends Component {
+  render() {
+    return <TouchableOpacity underlayColor="transparent" onPress={this.props.logout}>
+      <AppText style={[navbarButtonText]}><Icon size={16} name='sign-out'/></AppText>
+    </TouchableOpacity>
+  }
+}
+
+export function goHome({ routerObj }) {
+  function logoutGUI() {
+    logout();
+
+    routerObj.props.resetToRoute({
+      name: 'heymo!',
+      component: ProfileViewSmall
+    });
+  }
+
+  routerObj.props.resetToRoute({
+    name: 'heymo!',
+    component: MainHome,
+    leftCorner: () => <LogoutButton logout={logoutGUI}/>,
+    // leftCorner: ProfileButton,
+    rightCorner: NewMoButton,
+    sceneConfig: Navigator.SceneConfigs.FadeAndroid
+  });
 }
 
 

@@ -26,9 +26,9 @@ export async function getUser() {
 	return user;
 }
 
-export async function logout() {
-	setUser(null)
-	setAccessToken(null)
+export function logout() {
+	AsyncStorage.setItem('user', 'null')
+	AsyncStorage.setItem('accessToken', 'null')
 }
 
 
@@ -113,21 +113,10 @@ export async function sendMo({ momentText, momentImage, to }) {
 		var res = await apiPost('/moments', moment);
 		var newMomentId = res.id;
 
-		// upload forward
-		var forward = {
-		  dateCreated: todaysDate,
-		  dateOfForward: todaysDate,
-		  dateReveal: todaysDate,
-		  revealInterval: "1 day",
-		  isRemo: false,
-		  momentId: newMomentId
-		};
-
-		var res = await apiPost('/fowards/createWithTo', { data: forward, relations: { to: to } })
-
 
 	} catch(err) {
 		console.log(err)
+		throw err;
 	}
 
 
@@ -141,6 +130,18 @@ export function remo({ momentId, to }) {
 
 export function forwardMo({ momentId, revealInterval, to }) {
 
+		// // upload forward
+		// var forward = {
+		//   dateCreated: todaysDate,
+		//   dateOfForward: todaysDate,
+		//   dateReveal: todaysDate,
+		//   revealInterval: "1 day",
+		//   isRemo: false,
+		//   momentId: newMomentId
+		// };
+
+		// var res = await apiPost('/fowards/createWithTo', { data: forward, relations: { to: to } });
+
 }
 
 
@@ -148,10 +149,21 @@ export function forwardMo({ momentId, revealInterval, to }) {
 
 
 
+// const SERVER_URL_BASE = "http://onwikipedia.org";
+const SERVER_URL_BASE = "http://0.0.0.0:3000";
+const SERVER_URL = SERVER_URL_BASE+"/api";
 
+var Swagger = require('swagger-client');
 
-const SERVER_URL = "http://0.0.0.0:3000/api";
-// const SERVER_URL = "http://onwikipedia.org/api";
+async function loadAPIClient() {
+	var client = new Swagger({
+		url: SERVER_URL_BASE+'/explorer/swagger.json',
+		success: function() {
+			console.log(client);
+		}
+	});
+}
+
 
 class HeymoError {
 	constructor(errorObj) {

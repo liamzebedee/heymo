@@ -83,7 +83,6 @@ var styles = StyleSheet.create({
 		flex: .2,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
-		// backgroundColor: 'blue'
 	},
 });
 
@@ -95,11 +94,9 @@ class SingleMoment extends Component {
 		this.state = {
 			...this.props
 		}
-		/*
-		from
-		timeAgo
-		peopleTagged
-		*/
+
+		console.log('Showing moment with data ');
+		console.log(this.props)
 
 		this.forwardMo = this.forwardMo.bind(this)
 		this.reMo = this.reMo.bind(this)
@@ -110,14 +107,14 @@ class SingleMoment extends Component {
 		this.props.toRoute({
 			name: 'Forward mo\'',
 			component: SelectFriends,
-			leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
+			leftCorner: CancelButton,
 			rightCorner: View,
      		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
      		passProps: { 
      			forwardMoment: true, 
-     			momentId: self.props.momentId 
+     			moment: { id: self.props.moment.id }
      		}
-		})
+		});
 	}
 
 	reMo() {
@@ -133,10 +130,6 @@ class SingleMoment extends Component {
   //    			momentId: self.state.momentId 
   //    		}
 		// })
-
-/*Math.random().toString(36).slice(-12);
-
-"a95eaot4vx6r"*/
 
 	}
 
@@ -156,11 +149,11 @@ class SingleMoment extends Component {
 			</View>;
 
 		const ContentBody = (props) => {
-			if(props.contentImage) {
-				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+props.contentImage.data }} style={[styles.contentBody, {height: self.props.contentImage.height, resizeMode: 'cover'}]}/></View>
+			if(self.props.moment.contentImage) {
+				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+self.props.moment.contentImage.data }} style={[styles.contentBody, {height: self.props.moment.contentImage.height, resizeMode: 'cover'}]}/></View>
 			} else {
 				return <View style={styles.contentBody}>
-					<AppText styles={styles.contentText}>{props.contentText}</AppText>
+					<AppText styles={styles.contentText}>{self.props.moment.contentText}</AppText>
 				</View>
 			}
 		}

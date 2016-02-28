@@ -59,24 +59,12 @@ var navbarButtonText = {
       }
 
 
-class BackButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.goBack = () => this.props.toBack();
-  }
-
-  render() {
-    return <Ionicon style={[navbarButtonText, { fontSize: 28 }]} size={30} name='ios-arrow-back'/>
-  }
-}
-
-
 class NewMoButton extends Component {
   createMo() {
     this.props.toRoute({
       name: "New moment",
       component: NewMo,
-      rightCorner: View,
+      // rightCorner: View,
       sceneConfig: Navigator.SceneConfigs.FloatFromBottom
     });
   }
@@ -130,18 +118,34 @@ class ProfileButton extends Component {
 
 
 
-// OK Button
+class GenericTextButton extends Component {
+  render() {
+    if(this.props.disabled) {
+      return <Text style={[navbarButtonText, this.props.textStyles, { opacity: 0.5 }]}>{this.props.text}</Text>;
+    } else {
+      return <TouchableOpacity underlayColor="transparent" onPress={this.props.onPress}>
+        <Text style={[navbarButtonText, this.props.textStyles]}>{this.props.text}</Text>
+      </TouchableOpacity>;
+    }
+  }
+}
+
+
+class BackButton extends Component {
+  render() {
+    return <Ionicon style={[navbarButtonText, { fontSize: 28 }]} size={30} name='ios-arrow-back'/>
+  }
+}
+
 class OKButton extends Component {
 	render() {
-		return <TouchableOpacity underlayColor="transparent" onPress={this.props.onPress}>
-			<Text style={[navbarButtonText, { fontWeight: '700' }]}>OK</Text>
-		</TouchableOpacity>;
+    return <GenericTextButton textStyles={{ fontWeight: '700' }} disabled={this.props.disabled} text="OK"/>;
 	}
 }
 
 class CancelButton extends Component {
   render() {
-    return <TouchableOpacity underlayColor="transparent" onPress={this.props.goBack}>
+    return <TouchableOpacity underlayColor="transparent" onPress={this.props.toBack}>
       <Text style={navbarButtonText}>Cancel</Text>
     </TouchableOpacity>;
   }

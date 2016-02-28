@@ -30,14 +30,14 @@ import { joinUser, signInUser, getUser } from './API';
 import { MainHome } from './MainHome';
 
 
-class ProfileViewSmall extends Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props)
     this.state = {}
     this.state = { username: 'test', password: '123' }
 
-    this.join = this.join.bind(this)
-    this.signIn = this.signIn.bind(this)
+    this.join = this.join.bind(this);
+    this.signIn = this.signIn.bind(this);
   }
 
   join() {
@@ -65,8 +65,7 @@ class ProfileViewSmall extends Component {
   }
 
   navHome() {
-    var self = this;
-    goHome({ routerObj: self });
+    goHome({ routerObj: this });
   }
 
   componentDidMount() {
@@ -75,14 +74,12 @@ class ProfileViewSmall extends Component {
       login: self.login
     });
 
-    if(this.props.noAutologin) {
-      (async function() {
-        var user = await getUser();
-        if(user) {
-          self.signIn()
-        }
-      })();
-    }
+    (async function() {
+      var user = await getUser();
+      if(user) {
+        self.signIn()
+      }
+    })();
   }
 
   render() {
@@ -150,4 +147,4 @@ class ProfileViewSmall extends Component {
   }
 }
 
-export default ProfileViewSmall;
+export default LoginPage;

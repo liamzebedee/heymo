@@ -32,11 +32,16 @@ class NewMo extends Component {
   writeSomething() {
     var self = this;
 
+    var sendTextMo = () => {
+      self.sendMo({ moment: { contentText: self.state.contentText } });
+    };
+
     this.props.toRoute({
-      component: () => <NiceWritingInput onChangeText={(text) => self.setState({ contentText: text })}/>,
-      leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
-      rightCorner: () => <OKButton onPress={() => { self.sendMo({ contentText: self.state.contentText }) }}/>
-    })
+      name: "New moment",
+      component: (props) => <NiceWritingInput onChangeText={(text) => self.setState({ contentText: text })} {...props}/>,
+      leftCorner: CancelButton,
+      rightCorner: (props) => <OKButton {...props} onPress={sendTextMo}/>
+    });
   }
   
   capture() {
@@ -47,10 +52,10 @@ class NewMo extends Component {
       cancelButtonTitle: 'Cancel',
       takePhotoButtonTitle: 'Take Photo...', 
       chooseFromLibraryButtonTitle: 'Choose from Library...', 
-      cameraType: 'back', 
-      mediaType: 'photo', 
+      cameraType: 'back',
+      mediaType: 'photo',
       videoQuality: 'high', 
-      quality: 1.0, 
+      quality: 0.75,
       angle: 0, 
       allowsEditing: false, 
       noData: false, 
@@ -77,17 +82,15 @@ class NewMo extends Component {
         } else {
           return showError(response.error)
         }
-      }
-
-      else {
+      } else {
         image = {
           data: response.data,
           width: response.width,
           height: response.height
-        }
+        };
       }
 
-      this.sendMo({ contentImage: image });
+      this.sendMo({ moment: { contentImage: image } });
     });
   }
 
@@ -125,10 +128,7 @@ class NewMo extends Component {
         flexDirection: 'row',
         alignSelf: 'center', alignItems: 'center',justifyContent: 'center',
       }
-
-
-
-    })
+    });
 
     return <View style={styles.container}>
       <View style={[styles.box]}>
@@ -153,8 +153,21 @@ class NiceWritingInput extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      text: null
+      text: ""
     }
+
+    this.onChangeText = this.onChangeText.bind(this);
+    this.props.setRightProps({
+      disabled: true
+    });
+  }
+
+  onChangeText(text) {
+    this.setState({text});
+    this.props.setRightProps({
+      disabled: this.state.text === ""
+    });
+    this.props.onChangeText(text);
   }
 
   render() {
@@ -169,7 +182,7 @@ class NiceWritingInput extends Component {
     })
 
     return <View style={{ flex: 1 }}>
-      <ExpandingTextInput autoFocus={true} style={styles.textInput} onChangeText={(text) => { this.setState({text}); this.props.onChangeText(text)}} value={this.state.text} placeholder="A quote, a joke, whatever floats your boat..."/>
+      <ExpandingTextInput autoFocus={true} style={styles.textInput} onChangeText={this.onChangeText} value={this.state.text} placeholder="A quote, a joke, whatever floats your boat..."/>
     </View>;
   }
 }

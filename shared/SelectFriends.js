@@ -1,3 +1,4 @@
+"use strict";
 import React, {
   Component,
   View,
@@ -9,24 +10,24 @@ import React, {
   Text,
   Navigator,
 } from 'react-native';
+
 import {MainHome} from './MainHome';
 import {NiceButton, NewMoButton, goHome} from './Globals';
-var Icon = require('react-native-vector-icons/FontAwesome');
-var Ionicon = require('react-native-vector-icons/Ionicons');
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
-// var fuzzaldrin = require('fuzzaldrin')
 import {getFriends, getMeForSelectFriends, getUserId, sendMo, remo, forwardMo} from './API'
-
-import { createStore } from 'redux'
-import friends from './redux/reducers'
+import {friends, FriendStore} from './redux/reducers'
 import { addContact } from './redux/actions'
 
 var GiftedSpinner = require('react-native-gifted-spinner');
+var Icon = require('react-native-vector-icons/FontAwesome');
+var Ionicon = require('react-native-vector-icons/Ionicons');
 
 
 
-var FriendStore = createStore(friends)
+
+
+
 const mapStateToProps = (state) => {
   return {
     friends: state.all
@@ -39,10 +40,8 @@ class SelectFriends extends Component {
     FriendStore.subscribe( () => this.setState(mapStateToProps(FriendStore.getState())) )
 
     this.state = {
-      optionSelected: 0,
       addFriendText: "",
       friends: FriendStore.getState().all,
-      sendToMeTooLolImNotAlone: false
     }
 
     this.addFriend = this.addFriend.bind(this)
@@ -52,11 +51,8 @@ class SelectFriends extends Component {
 
   componentDidMount() {
     var self = this;
-    // (async () => {
-    //   self.setState({ 
-    //     friends: self.state.friends.concat(getFriends()) 
-    //   });
-    // })()
+    console.log('SelectFriends with moment:');
+    console.log(this.props.moment);
   }
 
   addFriend() {
@@ -84,39 +80,62 @@ class SelectFriends extends Component {
   }
 
   throwTheMo() {
+    var self = this;
+    
     var friendsToSendTo = this.state.friends.map((friend) => {
-      if(friend.selected) return friend;
+      if(friend.selected) return friend.id;
     })
+
 
     if(this.props.momentId) {
       // pre-existing moment
       if(this.props.forwardMoment) {
         (async () => {
           
-          await fowardMo({
-            momentId: this.props.momentId,
-            to: friendsToSendTo 
-          })
+          try {
+            await forwardMo({
+              momentId: this.props.moment.id,
+              to: friendsToSendTo,
+              revealInterval: '0'
+            });
+
+            goHome({ routerObj: self });
+          } catch(err) {
+            alert(err.message)
+          }
 
         })()
 
       } else if(this.props.remo) {
-        remo({
-          momentId: this.props.momentId,
-          to: friendsToSendTo
-        })
+        (async () => {
+
+          try {
+            await remo({
+              momentId: this.props.moment.id,
+              to: friendsToSendTo
+            });
+
+            goHome({ routerObj: self });
+          } catch(err) {
+            alert(err.message)
+          }
+
+        })();
+
       }
 
-    } else if(this.props.contentText !== null || this.props.contextImage !== null) {
+    } else if(this.props.moment.contentText || this.props.moment.contentImage) {
       // new moment
       (async () => {
         
         try {
           await sendMo({
             to: friendsToSendTo,
-            contentText: this.props.contentText,
-            contentImage: this.props.contentImage,
-          })
+            contentText: this.props.moment.contentText,
+            contentImage: this.props.moment.contentImage,
+          });
+
+          goHome({ routerObj: self });
         } catch(err) {
           alert(err.message)
         }
@@ -131,8 +150,6 @@ class SelectFriends extends Component {
       throw new Error("WTF");
     }
 
-    var self = this;
-    goHome({ routerObj: self });
   }
 
   render() {
@@ -145,7 +162,6 @@ class SelectFriends extends Component {
       }
     })
 
-    // var _debugInfo = <Text>{this.state.friends.map((friend) => { if(friend.selected) return friend.name; })}</Text>;
     var addFriendIcon = <Ionicon style={{ color: '#777' }} name="person-add" size={30}/>;
     if(this.state.addFriendText.length > 0) {
       addFriendIcon = 
@@ -168,8 +184,14 @@ class SelectFriends extends Component {
       <ScrollView style={{ flex: 0.8 }}>
       <Radio style={{ flex: 1 }} onSelect={this.onSelectFriend}>
         {this.state.friends.map((friend) => {
+          var friendStyle = {
+            fontSize: 28
+          };
+          if(friend.me) {
+            friendStyle.fontWeight = '700';
+          }
           return <Option key={friend.id} color="gray" selectedColor="#008BEF" isSelected={friend.selected} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
-            <Text style={{ fontSize: 28 }}>{friend.username}</Text>
+            <Text style={[friendStyle]}>{friend.username}</Text>
           </Option>;
         })}
         </Radio>

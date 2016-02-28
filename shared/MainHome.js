@@ -60,8 +60,7 @@ class MainHome extends Component {
   }
 
   viewMo(moment) {
-    var passProps = moment;
-    passProps.momentId = moment.id;
+    var passProps = { moment: moment };
 
     this.props.toRoute({
       name: "Moment",

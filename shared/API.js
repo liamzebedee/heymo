@@ -13,8 +13,8 @@ async function getAccessToken() {
 	return await AsyncStorage.getItem('accessToken')
 }
 
-async function setUser({ username, id }) {
-	AsyncStorage.setItem('user', JSON.stringify({ username, id }))
+async function setUser({ username, password, id }) {
+	AsyncStorage.setItem('user', JSON.stringify({ username, password, id }))
 }
 async function setAccessToken(token) {
 	AsyncStorage.setItem('accessToken', token)
@@ -22,7 +22,6 @@ async function setAccessToken(token) {
 
 export async function getUser() {
 	var user = JSON.parse(await AsyncStorage.getItem('user'));
-
 	return user;
 }
 
@@ -36,20 +35,19 @@ export async function joinUser({ username, password }) {
 	try {
 		var userCredentials = { username, password }
 		var user = await apiPost('/users', userCredentials, true);
-		userCredentials.id = user.id
-		await signInUser(userCredentials)
+		userCredentials.id = user.id;
+		await signInUser(userCredentials);
 	} catch(err) {
 		console.log(err)
 		throw err
 	}
 }
 
-export async function signInUser({ username, password, id }) {
+export async function signInUser({ username, password }) {
 	try {
-		setUser({ username, password, id })
-
-		var response = await apiPost('/users/login', { username, password }, true);
-		setAccessToken(response.id)
+		var res = await apiPost('/users/login', { username, password }, true);
+		setUser({ username, password, id: res.userId })
+		setAccessToken(res.id)
 	} catch(err) {
 		console.log(err)
 		throw err
@@ -97,51 +95,50 @@ export async function getHeymos() {
 }
 
 
-export async function sendMo({ momentText, momentImage, to }) {
+export async function sendMo({ contentImage, contentText, to }) {
 	var todaysDate = new Date;
+	var user = await getUser()
 
-	var moment = {};
-	if(momentImage) {
-		moment.contentImage = momentImage;
+	var moment = {
+		dateCreated: todaysDate,
+		creatorUserId: user.id
+	};
+	if(contentImage) {
+		moment.contentImage = contentImage;
 	} else {
-		moment.contentText = momentText;
+		moment.contentText = contentText;
 	}
-	moment.dateCreated = todaysDate;
 
 	// upload moment
 	try {
 		var res = await apiPost('/moments', moment);
 		var newMomentId = res.id;
-
+		var res = await forwardMo({ momentId: newMomentId, revealInterval: '0', to, isRemo: false })
 
 	} catch(err) {
 		console.log(err)
 		throw err;
 	}
-
-
 }
 
-// 
-
-export function remo({ momentId, to }) {
-
+export async function remo({ momentId, to }) {
+	var res = await forwardMo({ momentId, to, revealInterval: '0', isRemo: true });
+	return res;
 }
 
-export function forwardMo({ momentId, revealInterval, to }) {
+export async function forwardMo({ momentId, revealInterval, to, isRemo }) {
+	var user = await getUser()
+	var forward = {
+		dateCreated: new Date,
+		dateReveal: new Date,
+		fromUserId: user.id,
+		isRemo: isRemo || false,
+		momentId: momentId,
+		revealInterval: revealInterval,
+		toUserIds: to
+	};
 
-		// // upload forward
-		// var forward = {
-		//   dateCreated: todaysDate,
-		//   dateOfForward: todaysDate,
-		//   dateReveal: todaysDate,
-		//   revealInterval: "1 day",
-		//   isRemo: false,
-		//   momentId: newMomentId
-		// };
-
-		// var res = await apiPost('/fowards/createWithTo', { data: forward, relations: { to: to } });
-
+	var res = await apiPost('/forwards', forward );
 }
 
 
@@ -154,13 +151,12 @@ const SERVER_URL_BASE = "http://0.0.0.0:3000";
 const SERVER_URL = SERVER_URL_BASE+"/api";
 
 var Swagger = require('swagger-client');
+var client = null;
 
 async function loadAPIClient() {
-	var client = new Swagger({
+	client = await new Swagger({
 		url: SERVER_URL_BASE+'/explorer/swagger.json',
-		success: function() {
-			console.log(client);
-		}
+		usePromise: true
 	});
 }
 
@@ -204,6 +200,7 @@ async function api({ endpoint, params, noAuth, method }) {
     }
 
 	try {
+		console.log(`API call to ${method} ${url} with params ${JSON.stringify(params)}`);
 		var res = await fetch(url, opts)
 		var data = await res.json();
 		

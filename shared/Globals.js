@@ -36,12 +36,18 @@ class AppText extends Component {
 
 class NiceButton extends Component {
 	render() {
-		return <TouchableOpacity style={[{
-	        backgroundColor: '#5890ff',
-	        borderRadius: 5,
-	      }, this.props.style]} onPress={this.props.onPress}>
-	      {this.props.children}
-		</TouchableOpacity>
+    var style = [{
+            backgroundColor: '#5890ff',
+            borderRadius: 5,
+          }, this.props.style];
+
+    if(this.props.disabled) {
+      return <View style={[...style, { opacity: 0.5 }]}>{this.props.children}</View>
+    } else {
+		return <TouchableOpacity style={style} onPress={this.props.onPress}>
+  	   {this.props.children}
+  		</TouchableOpacity>
+    }
 	}
 }
 
@@ -80,41 +86,41 @@ class NewMoButton extends Component {
   }
 }
 
-class ProfileButton extends Component {
-  constructor(props) {
-    super(props)
-    this.showProfile = this.showProfile.bind(this)
-    this.doSave = this.doSave.bind(this)
-  }
+// class ProfileButton extends Component {
+//   constructor(props) {
+//     super(props)
+//     this.showProfile = this.showProfile.bind(this)
+//     this.doSave = this.doSave.bind(this)
+//   }
 
-  doSave() {
-    alert('saved')
-  }
+//   doSave() {
+//     alert('saved')
+//   }
 
-  showProfile() {
-    var self = this;
-    this.props.toRoute({
-      name: "Profile",
-      component: ProfileViewSmall,
-      rightCorner: SaveButton,
-      sceneConfig: Navigator.SceneConfigs.FloatFromLeft
-    })
-  }
+//   showProfile() {
+//     var self = this;
+//     this.props.toRoute({
+//       name: "Profile",
+//       component: ProfileViewSmall,
+//       rightCorner: SaveButton,
+//       sceneConfig: Navigator.SceneConfigs.FloatFromLeft
+//     })
+//   }
 
-  render() {
-    var styles = StyleSheet.create({
-      container: {
-        backgroundColor: 'white'
-      }
-    });
+//   render() {
+//     var styles = StyleSheet.create({
+//       container: {
+//         backgroundColor: 'white'
+//       }
+//     });
 
-    return <View>
-      <TouchableOpacity underlayColor="transparent" onPress={this.showProfile}>
-        <AppText style={[navbarButtonText]}><Ionicon size={16} name='person'/></AppText>
-      </TouchableOpacity>
-    </View>
-  }
-}
+//     return <View>
+//       <TouchableOpacity underlayColor="transparent" onPress={this.showProfile}>
+//         <AppText style={[navbarButtonText]}><Ionicon size={16} name='person'/></AppText>
+//       </TouchableOpacity>
+//     </View>
+//   }
+// }
 
 
 
@@ -139,7 +145,7 @@ class BackButton extends Component {
 
 class OKButton extends Component {
 	render() {
-    return <GenericTextButton textStyles={{ fontWeight: '700' }} disabled={this.props.disabled} text="OK"/>;
+    return <GenericTextButton textStyles={{ fontWeight: '700' }} disabled={this.props.disabled} text="OK" onPress={this.props.onPress}/>;
 	}
 }
 
@@ -243,4 +249,4 @@ export function goHome({ routerObj }) {
 // }
 
 
-export { colours, AppText, showError, NiceButton, BackButton, NewMoButton, OKButton, CancelButton, ProfileButton, RegisterLoginButton };
+export { colours, AppText, showError, NiceButton, BackButton, NewMoButton, OKButton, CancelButton, RegisterLoginButton };

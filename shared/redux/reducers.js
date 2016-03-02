@@ -1,12 +1,20 @@
 // Contacts
 // --------
 
-import { createStore, applyMiddleware } from 'redux';
+import {AsyncStorage} from 'react-native'
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { loadFriends } from './actions';
+import { persistStore, autoRehydrate } from 'redux-persist';
 
 
 
+var withMiddleware = compose(autoRehydrate(), applyMiddleware(thunkMiddleware));
+
+//
+// Contacts
+//
+//
 const initialState_friends = {
   all: []
 }
@@ -23,7 +31,6 @@ const friends = (state = initialState_friends, action) => {
       break;
 
     case 'friendsLoaded':
-      console.log(action.friends);
       return Object.assign({}, state, {
         all: action.friends
       });
@@ -34,8 +41,52 @@ const friends = (state = initialState_friends, action) => {
   }
 }
 
-FriendStore = createStore(friends, applyMiddleware(thunkMiddleware));
+const FriendStore = createStore(friends, initialState_friends, withMiddleware);
+persistStore(FriendStore, {storage: AsyncStorage});
 
-FriendStore.dispatch(loadFriends())
 
-export { friends, FriendStore };
+
+
+//
+// Moments
+// (actually they are forwards)
+//
+//
+const initialState_moments = {
+  all: [],
+  loading: false
+};
+
+const moments = (state, action) => {
+  switch (action.type) {
+    case 'momentsLoaded':
+      return Object.assign({}, state, {
+        all: action.moments,
+        loading: false
+      });
+      break;
+
+    default:
+      return state
+  }
+  return state;
+}
+
+const MomentsStore = createStore(moments, initialState_moments, withMiddleware);
+persistStore(MomentsStore, {storage: AsyncStorage});
+
+
+
+
+
+
+
+
+
+
+
+
+export {
+  FriendStore,
+  MomentsStore
+};

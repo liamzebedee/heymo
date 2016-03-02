@@ -16,8 +16,8 @@ import {NiceButton, NewMoButton, goHome} from './Globals';
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 import {getFriends, getMeForSelectFriends, getUserId, sendMo, remo, forwardMo} from './API'
-import {friends, FriendStore} from './redux/reducers'
-import { addContact } from './redux/actions'
+import {FriendStore} from './redux/reducers'
+import { loadFriends, addContact } from './redux/actions'
 
 var GiftedSpinner = require('react-native-gifted-spinner');
 var Icon = require('react-native-vector-icons/FontAwesome');
@@ -37,7 +37,6 @@ const mapStateToProps = (state) => {
 class SelectFriends extends Component {
   constructor(props) {
     super(props);
-    FriendStore.subscribe( () => this.setState(mapStateToProps(FriendStore.getState())) )
 
     this.state = {
       addFriendText: "",
@@ -47,9 +46,13 @@ class SelectFriends extends Component {
     this.addFriend = this.addFriend.bind(this)
     this.onSelectFriend = this.onSelectFriend.bind(this)
     this.throwTheMo = this.throwTheMo.bind(this)
+    this.getFriendsToSendTo = this.getFriendsToSendTo.bind(this)
   }
 
   componentDidMount() {
+    FriendStore.subscribe( () => this.setState(mapStateToProps(FriendStore.getState())) )
+    FriendStore.dispatch(loadFriends());
+
     var self = this;
     console.log('SelectFriends with moment:');
     console.log(this.props.moment);
@@ -79,15 +82,17 @@ class SelectFriends extends Component {
     this.setState({ friends })
   }
 
+  getFriendsToSendTo() {
+    return this.state.friends.filter((friend) => friend.selected).map((friend) => friend.id);
+  }
+
   throwTheMo() {
     var self = this;
     
-    var friendsToSendTo = this.state.friends.map((friend) => {
-      if(friend.selected) return friend.id;
-    })
+    var friendsToSendTo = this.getFriendsToSendTo();
 
 
-    if(this.props.momentId) {
+    if(this.props.moment.id) {
       // pre-existing moment
       if(this.props.forwardMoment) {
         (async () => {
@@ -173,6 +178,8 @@ class SelectFriends extends Component {
       addFriendIcon = <GiftedSpinner/>;
     }
 
+    console.log(this.getFriendsToSendTo())
+    var disableSendButton = this.getFriendsToSendTo().length == 0;
 
     return <View style={{ flex: 1 }}>
     	<View style={{ flex: 0.1, padding: 10, flexDirection: 'row', flexWrap: 'wrap', borderBottomWidth: 1, borderBottomColor: '#888', marginBottom: 5, alignItems: 'center' }}>
@@ -197,7 +204,7 @@ class SelectFriends extends Component {
         </Radio>
       </ScrollView>
 
-    	<NiceButton style={{ flex: 0.1, alignSelf: 'stretch', justifyContent: 'flex-end', height: 60 }} onPress={this.throwTheMo}><Text style={{color: 'white', padding: 20, fontSize: 28 }}><Icon name="send-o" size={28}/> Throw the mo'</Text>
+    	<NiceButton disabled={disableSendButton} style={{ flex: 0.1, alignSelf: 'stretch', justifyContent: 'flex-end', height: 60 }} onPress={this.throwTheMo}><Text style={{color: 'white', padding: 20, fontSize: 28 }}><Icon name="send-o" size={28}/> Throw the mo'</Text>
       </NiceButton>
 
     </View>

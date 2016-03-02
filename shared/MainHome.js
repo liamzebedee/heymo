@@ -12,17 +12,24 @@ import React, {
 } from 'react-native';
 var GridView = require('react-native-grid-view');
 var Icon = require('react-native-vector-icons/FontAwesome');
+var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 import {colours, BackButton,showNotification, NewMoButton} from './Globals';
 import {SingleMoment} from './SingleMoment';
 import { getHeymos } from './API';
+import {MomentsStore} from './redux/reducers'
+import {loadMoments} from './redux/actions';
 
 
-// import {AsyncStorage} from 'react-native'
 
-// import {persistStore, autoRehydrate} from 'redux-persist'
-// const store = createStore(reducer, null, autoRehydrate())
-// persistStore(store, {storage: AsyncStorage})
+
+const mapStateToProps = (state) => {
+  return {
+    receivedHeymos: state.all,
+    loading: state.loading
+  }
+}
+
 
 
 
@@ -31,8 +38,8 @@ class MainHome extends Component {
     super(props);
 
     this.state = {
-      receivedHeymos: [],
-      loading: true
+      receivedHeymos: MomentsStore.getState().all,
+      loading:  MomentsStore.getState().loading,
     };
 
     this._renderItem = this._renderItem.bind(this);
@@ -40,6 +47,7 @@ class MainHome extends Component {
   }
 
   componentDidMount() {
+    MomentsStore.subscribe( () => this.setState(mapStateToProps(MomentsStore.getState())) )
     this.loadHeymos()
   }
 
@@ -47,11 +55,7 @@ class MainHome extends Component {
     var self = this;
 
     this.setState({ loading: true });
-
-    (async () => {
-      var heymos = await getHeymos()
-      self.setState({ loading: false, receivedHeymos: heymos || [] })
-    })()
+    MomentsStore.dispatch(loadMoments())
   }
 
   _renderItem(item) {
@@ -78,6 +82,10 @@ class MainHome extends Component {
     });
 
 
+        <ReactPage tabLabel="React" />
+        <FlowPage tabLabel="Flow" />
+        <JestPage tabLabel="Jest" />
+      </ScrollableTabView>
     var scrollView = <ScrollView refreshControl={
           <RefreshControl
             refreshing={this.state.loading}
@@ -87,12 +95,21 @@ class MainHome extends Component {
             colors={['#ff0000', '#00ff00', '#0000ff']}
             progressBackgroundColor="#ffff00"/>}/>;
 
-    return <View style={{ flex: 1, marginTop: 10 }}>
-      <GridView
-          items={this.state.receivedHeymos}
-          itemsPerRow={3}
-          renderItem={this._renderItem}
-          renderScrollComponent={() => scrollView}/>
+    return <View style={{ flex: 1 }}>
+      
+      <ScrollableTabView>
+        <View tabLabel='Inbox'>
+          <GridView
+            style={{ marginTop: 10 }}
+            items={this.state.receivedHeymos}
+            itemsPerRow={3}
+            renderItem={this._renderItem}
+            renderScrollComponent={() => scrollView}/>
+        </View>
+
+        <View tabLabel='Collections'>
+        </View>
+      </ScrollableTabView>
     </View>
   }
 }

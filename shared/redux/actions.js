@@ -1,6 +1,8 @@
+//
 // Contacts
-// --------
-import {getUser} from '../API';
+//
+//
+import {getUser, getHeymos} from '../API';
 
 async function getMeForSelectFriends() {
   var user = await getUser();
@@ -13,8 +15,8 @@ async function getMeForSelectFriends() {
 
 export function loadFriends() {
 	return (dispatch) => {
-		getMeForSelectFriends().then(function(res) {
-			dispatch(friendsLoaded([res]));
+		return getMeForSelectFriends().then(function(res) {
+			return dispatch(friendsLoaded([res]));
 		})
 	}
 }
@@ -33,3 +35,26 @@ export const addContact = (username, id) => {
     id: id,
   }
 }
+
+
+
+//
+// Moments
+// (actually they are forwards)
+//
+//
+export function loadMoments() {
+  return (dispatch) => {
+    getHeymos().then((heymos) => {
+      dispatch(momentsLoaded(heymos));
+    })
+  }
+}
+
+export const momentsLoaded = (moments) => {
+  return {
+    type: 'momentsLoaded',
+    moments
+  }
+}
+

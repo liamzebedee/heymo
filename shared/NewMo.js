@@ -31,6 +31,7 @@ class NewMo extends Component {
 
   writeSomething() {
     var self = this;
+    var date = +new Date;
 
     var sendTextMo = () => {
       self.sendMo({ moment: { contentText: self.state.contentText } });
@@ -151,12 +152,15 @@ class NewMo extends Component {
 
 class NiceWritingInput extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       text: ""
-    }
+    };
 
     this.onChangeText = this.onChangeText.bind(this);
+  }
+
+  componentDidMount() {   
     this.props.setRightProps({
       disabled: true
     });
@@ -175,7 +179,7 @@ class NiceWritingInput extends Component {
       textInput: {
         flex: 1, 
         fontSize: 36,
-        color: "#333", 
+        color: "#333",
         fontFamily: "Helvetica Neue",
         fontWeight: '300'
       },

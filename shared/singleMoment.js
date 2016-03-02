@@ -16,6 +16,7 @@ import React, {
 
 var Button = require('react-native-button');
 var Icon = require('react-native-vector-icons/FontAwesome');
+var moment = require('moment');
 import {AppText, CancelButton, colours} from './Globals';
 import {weirdImage, niceImage} from './_sampleData';
 import {SelectFriends} from './SelectFriends'
@@ -112,29 +113,24 @@ class SingleMoment extends Component {
      		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
      		passProps: { 
      			forwardMoment: true, 
-     			moment: { id: self.props.moment.id }
+     			moment: { id: self.props.moment.moment.id }
      		}
 		});
 	}
 
 	reMo() {
-		// var self = this;
-		// this.props.toRoute({
-		// 	name: 'Remo',
-		// 	component: SelectFriends,
-		// 	leftCorner: () => <CancelButton goBack={self.props.toBack}/>,
-		// 	rightCorner: View,
-  //    		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
-  //    		passProps: {
-  //    			remo: true, 
-  //    			momentId: self.state.momentId 
-  //    		}
-		// })
-
-	}
-
-	componentWillMount() {
-
+		var self = this;
+		this.props.toRoute({
+			name: 'Remo',
+			component: SelectFriends,
+			leftCorner: CancelButton,
+			rightCorner: View,
+     		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
+     		passProps: {
+     			remo: true, 
+     			moment: { id: self.props.moment.moment.id }
+     		}
+		})
 	}
 
 	render() {
@@ -142,69 +138,83 @@ class SingleMoment extends Component {
 
 		const Padding = () => <View/>;
 
-		const Head = (props) =>
-			<View style={styles.head}>
-				<AppText style={{ flex: 1, justifyContent: 'flex-start', padding: 10, fontWeight: '700' }}>{props.from}</AppText>
-				<AppText style={{ flex: 1, justifyContent: 'flex-end', textAlign: 'right', padding: 10 }}><Icon name='clock-o'/> {props.timeAgo} ago</AppText>
+		const Head = (props) => {
+			var time = moment(props.dateCreated).fromNow();
+			var from = props.fromUser.username.toUpperCase();
+
+			return <View style={styles.head}>
+				<AppText style={{ flex: 1, justifyContent: 'flex-start', padding: 10, fontWeight: '700' }}><Icon name='user'/> {from}</AppText>
+				<AppText style={{ flex: 1, justifyContent: 'flex-end', textAlign: 'right', padding: 10 }}><Icon name='clock-o'/> {time}</AppText>
 			</View>;
+		}
 
 		const ContentBody = (props) => {
-			if(self.props.moment.contentImage) {
-				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+self.props.moment.contentImage.data }} style={[styles.contentBody, {height: self.props.moment.contentImage.height, resizeMode: 'cover'}]}/></View>
+			var content = self.props.moment.moment;
+			
+			if(content.contentImage) {
+				return <View style={{flex:1}} key={1}><Image source={{uri: 'data:image/png;base64,'+content.contentImage.data }} style={[styles.contentBody, {height: content.contentImage.height, resizeMode: 'cover'}]}/></View>
 			} else {
 				return <View style={styles.contentBody}>
-					<AppText styles={styles.contentText}>{self.props.moment.contentText}</AppText>
+					<AppText style={styles.contentText}>{content.contentText}</AppText>
 				</View>
 			}
 		}
 
-		const Foot = (props) => 
-			<View style={styles.foot}>
-				<AppText>{props.peopleTagged}</AppText>
-			</View>;
+		const Foot = (props) => {
+			var peopleTagged = props.toUsers.map((user) => {return user+', ';});
 
-		const Buttons = (props) => 
-			<View style={styles.buttonRow}>
-				<RoundIconButton name='mail-forward' score={this.state.numForwards} onPress={this.forwardMo}/>
-				<RoundIconButton name='refresh' score={this.state.numRemos} onPress={this.reMo}/>
+			return <View style={styles.foot}>
+				<AppText>{peopleTagged}</AppText>
 			</View>;
+		}
+
+		const Buttons = (props) => {
+			var numForwards = 5;
+			var numRemos = 3;
+
+			return <View style={styles.buttonRow}>
+				<RoundIconButton name='mail-forward' score={numForwards} onPress={this.forwardMo}/>
+				<RoundIconButton name='refresh' score={numRemos} onPress={this.reMo}/>
+			</View>;
+		}
 
 		
 		var background = '';
 
 		return <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-around' }}>
-				<Head {...this.state}/>
-				<ContentBody {...this.state}/>
+				<Head {...this.props.moment}/>
+				<ContentBody {...this.props.moment}/>
 				<Buttons/>
 			</View>;
-		}
 	}
+}
 
-	class RoundIconButton extends Component {
-		render() {
-			return <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
-				<AppText style={{ paddingRight: 10, fontSize: 25, color: '#999' }}>{this.props.score}</AppText>
-				<TouchableOpacity onPress={this.props.onPress}>
-					<Icon name={this.props.name} size={55} style={styles.button}/>
-				</TouchableOpacity>
-			</View>;		
-		}
+
+class RoundIconButton extends Component {
+	render() {
+		return <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
+			<AppText style={{ paddingRight: 10, fontSize: 25, color: '#999' }}>{this.props.score}</AppText>
+			<TouchableOpacity onPress={this.props.onPress}>
+				<Icon name={this.props.name} size={55} style={styles.button}/>
+			</TouchableOpacity>
+		</View>;		
 	}
+}
 
-	class TumblrText extends Component {
-		render() {
-			var factor = 1;
-			var fontSize = 16 * factor;
-			var lineHeight = 1.6;
-			var lineHeightPx = PixelRatio.getPixelSizeForLayoutSize(lineHeightPx * fontSize);
+class TumblrText extends Component {
+	render() {
+		var factor = 1;
+		var fontSize = 16 * factor;
+		var lineHeight = 1.6;
+		var lineHeightPx = PixelRatio.getPixelSizeForLayoutSize(lineHeightPx * fontSize);
 
-			return <AppText style={{
-				color: "#333", 
-				fontFamily: "Helvetica Neue",
-				fontSize: fontSize,
-				lineHeight: lineHeightPx,
-			}}>{this.props.children}</AppText>
-		}
+		return <AppText style={{
+			color: "#333", 
+			fontFamily: "Helvetica Neue",
+			fontSize: fontSize,
+			lineHeight: lineHeightPx,
+		}}>{this.props.children}</AppText>
 	}
+}
 
 	export { SingleMoment }

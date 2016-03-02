@@ -1,5 +1,5 @@
 'use strict';
-global.___DEV___ = false;
+// global.___DEV___ = false;
 import React, {
   AppRegistry,
   Component,

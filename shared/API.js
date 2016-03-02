@@ -39,6 +39,9 @@ export async function joinUser({ username, password }) {
 		await signInUser(userCredentials);
 	} catch(err) {
 		console.log(err)
+		if(err.details.details.codes.username[0] === 'uniqueness') {
+			throw new Error("Username already taken!");
+		}
 		throw err
 	}
 }
@@ -50,6 +53,9 @@ export async function signInUser({ username, password }) {
 		setAccessToken(res.id)
 	} catch(err) {
 		console.log(err)
+		if(err.details.code === "LOGIN_FAILED") {
+			throw new Error("Login failed: wrong username/password?")
+		}
 		throw err
 	}
 }
@@ -72,22 +78,17 @@ export async function getUserId(username) {
 
 
 
-export async function getHeymos() {
-	var testData = [
-		{ opened: true, locked: false, id: 123123213, contentImage: {
-			data: niceImage,
-			height: 300,
-			width: 300
-			}, 
-		},
-        { opened: false, locked: false, id: "213d2131233", contentText: 'hey hey' },
-        { opened: false, locked: true, id: "63452343423", contentText: 'Love is a funny thing....' },
-    ];
+export async function getHeymos({ sinceTime }) {
     testData = [];
-
+    var user = await getUser()
 
 	try {
-		var data = await apiGet('/moments/getCurrentMos', {"include":"creatorUser"})
+		var params = {
+			userid: user.id
+		}
+		if(sinceTime) params.sinceTime = sinceTime;
+		
+		var data = await apiGet('/forwards/getCurrentMos', params)
 		return data.mos.concat(testData)
 	} catch(err) {
 		alert(err.message)
@@ -131,11 +132,12 @@ export async function forwardMo({ momentId, revealInterval, to, isRemo }) {
 	var forward = {
 		dateCreated: new Date,
 		dateReveal: new Date,
-		fromUserId: user.id,
 		isRemo: isRemo || false,
-		momentId: momentId,
 		revealInterval: revealInterval,
-		toUserIds: to
+
+		momentId: momentId,
+		fromUserId: user.id,
+		toUserIds: to || []
 	};
 
 	var res = await apiPost('/forwards', forward );
@@ -146,8 +148,8 @@ export async function forwardMo({ momentId, revealInterval, to, isRemo }) {
 
 
 
-// const SERVER_URL_BASE = "http://onwikipedia.org";
-const SERVER_URL_BASE = "http://0.0.0.0:3000";
+const SERVER_URL_BASE = "http://heymo1.onwikipedia.org:3000";
+// const SERVER_URL_BASE = "http://0.0.0.0:3000";
 const SERVER_URL = SERVER_URL_BASE+"/api";
 
 var Swagger = require('swagger-client');

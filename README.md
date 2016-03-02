@@ -1,5 +1,56 @@
 
 
+HOW TO DEPLOY
+-------------
+
+ - change the server URL
+ - change the iOS dev option
+
+
+
+TODO
+----
+
+Polishing:
+- fix back area in react-native
+- fix the display of text
+- loading for when you are posting text
+- loading for when you are posting 
+- don't duplicate forwards of same moment
+
+
+I would like to post: 
+  remember that life is blah blah blah (1d)
+  remember that time crazy shit happened (1w)
+  here's some crazy image to chris
+  here's some dialog/idea to ric
+
+
+  remember this shit tomorrow night after we iz high.
+
+Proper things
+ - add local push notifications
+ - create collections or something
+ - add moodboard for coloured images
+ - add realtime discussion for posts
+ - nice-ass fonts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Set a username (essential for comms)
 Make sure other people don't login with the same username

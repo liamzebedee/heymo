@@ -17,6 +17,10 @@ Polishing:
 - loading for when you are posting text
 - loading for when you are posting 
 - don't duplicate forwards of same moment
+- date picker for interval
+- remo functionality
+- notifications
+- nicer font sizing for contact send to.
 
 
 I would like to post: 
@@ -24,7 +28,6 @@ I would like to post:
   remember that time crazy shit happened (1w)
   here's some crazy image to chris
   here's some dialog/idea to ric
-
 
   remember this shit tomorrow night after we iz high.
 

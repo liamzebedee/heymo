@@ -134,6 +134,7 @@ class SelectFriends extends Component {
       (async () => {
         
         try {
+          
           await sendMo({
             to: friendsToSendTo,
             contentText: this.props.moment.contentText,

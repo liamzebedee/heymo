@@ -12,7 +12,7 @@
     "fuzzaldrin": "^2.1.0",
     "moment": "^2.11.2",
     "path": "^0.12.7",
-    "react-native": "^0.20.0",
+    "react-native": "^0.21.0",
     "react-native-button": "^1.4.2",
     "react-native-clipboard": "0.0.5",
     "react-native-gifted-spinner": "0.0.3",
@@ -30,6 +30,6 @@
     "swagger-client": "^2.1.11"
   },
   "peerDependencies": {
-    "react-native": "^0.20.0"
+    "react-native": "^0.21.0"
   }
 }

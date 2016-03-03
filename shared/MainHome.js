@@ -81,11 +81,6 @@ class MainHome extends Component {
       }
     });
 
-
-        <ReactPage tabLabel="React" />
-        <FlowPage tabLabel="Flow" />
-        <JestPage tabLabel="Jest" />
-      </ScrollableTabView>
     var scrollView = <ScrollView refreshControl={
           <RefreshControl
             refreshing={this.state.loading}
@@ -97,8 +92,8 @@ class MainHome extends Component {
 
     return <View style={{ flex: 1 }}>
       
-      <ScrollableTabView>
-        <View tabLabel='Inbox'>
+      <ScrollableTabView style={{ flex: 1 }}>
+        <View tabLabel='Inbox' style={{ flex: 1 }}>
           <GridView
             style={{ marginTop: 10 }}
             items={this.state.receivedHeymos}
@@ -107,7 +102,7 @@ class MainHome extends Component {
             renderScrollComponent={() => scrollView}/>
         </View>
 
-        <View tabLabel='Collections'>
+        <View tabLabel='Collections' style={{ flex: 1 }}>
         </View>
       </ScrollableTabView>
     </View>

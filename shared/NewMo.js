@@ -4,8 +4,9 @@ import React, {
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity,
-  Text,
 } from 'react-native';
+import Text from './misc/Text';
+
 var ExpandingTextInput = require('../ExpandingTextInput')
 var UIImagePickerManager = require('NativeModules').UIImagePickerManager;
 var Icon = require('react-native-vector-icons/FontAwesome');
@@ -134,7 +135,7 @@ class NewMo extends Component {
     return <View style={styles.container}>
       <View style={[styles.box]}>
         <TouchableOpacity style={styles.addMedia} onPress={this.writeSomething}>
-           <Text style={styles.prettyButton}><Icon name='font' size={25}/> Write something</Text>
+           <Text padding={30} style={styles.prettyButton}><Icon name='font' size={25}/> Write something</Text>
         </TouchableOpacity>
       </View>
 
@@ -142,7 +143,7 @@ class NewMo extends Component {
 
       <View style={[styles.box]}>
         <TouchableOpacity style={styles.addMedia} onPress={this.capture}>
-          <Text style={styles.prettyButton}><Icon name='camera' size={25}/> Capture</Text>
+          <Text padding={30} style={styles.prettyButton}><Icon name='camera' size={25}/> Capture</Text>
         </TouchableOpacity>
       </View>
     </View>;

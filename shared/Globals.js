@@ -11,12 +11,19 @@ import React, {
   TextInput,
   Clipboard
 } from 'react-native';
-var Icon = require('react-native-vector-icons/FontAwesome');
-var Ionicon = require('react-native-vector-icons/Ionicons');
+
 import {NewMo, NiceWritingInput} from './NewMo';
 import {getUser, createUser, logout} from './API'
 import ProfileViewSmall from './Login';
 import {MainHome} from './MainHome';
+
+var Icon = require('react-native-vector-icons/FontAwesome');
+var Ionicon = require('react-native-vector-icons/Ionicons');
+
+
+
+
+
 
 var colours = {
   blue: '#5890ff',
@@ -25,8 +32,6 @@ var colours = {
   lightBlue: '#CAE6F2',
   green: '#849F35'
 };
-
-
 
 class AppText extends Component {
 	render() {
@@ -37,9 +42,9 @@ class AppText extends Component {
 class NiceButton extends Component {
 	render() {
     var style = [{
-            backgroundColor: '#5890ff',
-            borderRadius: 5,
-          }, this.props.style];
+      backgroundColor: '#5890ff',
+      borderRadius: 5,
+    }, this.props.style];
 
     if(this.props.disabled) {
       return <View style={[...style, { opacity: 0.5 }]}>{this.props.children}</View>
@@ -57,13 +62,11 @@ function showError(msg) {
 
 
 var navbarButtonText = {
-        color: 'white',
-        margin: 10,
-        fontWeight: '600',
-        textAlign: 'center',
-        alignItems: 'center',
-      }
-
+  color: 'white',
+  fontWeight: '600',
+  textAlign: 'center',
+  alignItems: 'center',
+}
 
 class NewMoButton extends Component {
   createMo() {
@@ -80,47 +83,11 @@ class NewMoButton extends Component {
 
     return <View>
       <TouchableOpacity underlayColor="transparent" onPress={this.createMo.bind(this)}>
-        <AppText style={[navbarButtonText]}><Ionicon name='plus-round'/> New mo'</AppText>
+        <View style={{padding:10}}><AppText style={[navbarButtonText]}><Ionicon name='plus-round'/> New mo'</AppText></View>
       </TouchableOpacity>
     </View>;
   }
 }
-
-// class ProfileButton extends Component {
-//   constructor(props) {
-//     super(props)
-//     this.showProfile = this.showProfile.bind(this)
-//     this.doSave = this.doSave.bind(this)
-//   }
-
-//   doSave() {
-//     alert('saved')
-//   }
-
-//   showProfile() {
-//     var self = this;
-//     this.props.toRoute({
-//       name: "Profile",
-//       component: ProfileViewSmall,
-//       rightCorner: SaveButton,
-//       sceneConfig: Navigator.SceneConfigs.FloatFromLeft
-//     })
-//   }
-
-//   render() {
-//     var styles = StyleSheet.create({
-//       container: {
-//         backgroundColor: 'white'
-//       }
-//     });
-
-//     return <View>
-//       <TouchableOpacity underlayColor="transparent" onPress={this.showProfile}>
-//         <AppText style={[navbarButtonText]}><Ionicon size={16} name='person'/></AppText>
-//       </TouchableOpacity>
-//     </View>
-//   }
-// }
 
 
 

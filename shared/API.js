@@ -79,7 +79,6 @@ export async function getUserId(username) {
 
 
 export async function getHeymos({ sinceTime }) {
-    testData = [];
     var user = await getUser()
 
 	try {
@@ -89,9 +88,9 @@ export async function getHeymos({ sinceTime }) {
 		if(sinceTime) params.sinceTime = sinceTime;
 		
 		var data = await apiGet('/forwards/getCurrentMos', params)
-		return data.mos.concat(testData)
+		return data.mos;
 	} catch(err) {
-		alert(err.message)
+		// alert(err.message)
 	}
 }
 

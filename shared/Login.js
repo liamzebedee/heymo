@@ -85,14 +85,14 @@ class LoginPage extends Component {
   render() {
     var styles = StyleSheet.create({
       textPadding: {
-        paddingLeft: 15,
-        paddingBottom: 5
+        margin: 15,
+        margin: 5
       },
       heading: {
         fontWeight: '300',
         fontSize: 28,
         color: colours.pink,
-        padding: 15
+        margin: 15
       },
       input: {
         flex: 1,

@@ -26,13 +26,14 @@ import { getUser } from './shared/API'
 
 var FIRST_PAGE;
 // FIRST_PAGE = MainHome;
-// FIRST_PAGE = NewMo;
+FIRST_PAGE = NewMo;
 // FIRST_PAGE = SingleMoment;
 // FIRST_PAGE = SelectFriends;
 // const FIRST_PAGE = NiceWritingInput;
 // const FIRST_PAGE = ProfileViewSmall;
 // FIRST_PAGE = DebugPage;
-FIRST_PAGE = LoginPage;
+// FIRST_PAGE = TimeSelector;
+// FIRST_PAGE = LoginPage;
 
 import {MainHome} from './shared/MainHome';
 import {NewMo, NiceWritingInput} from './shared/NewMo';
@@ -40,6 +41,7 @@ import {SingleMoment} from './shared/SingleMoment';
 import {SelectFriends} from './shared/SelectFriends';
 import LoginPage from './shared/Login';
 import DebugPage from './shared/Debug';
+import TimeSelector from './shared/TimeSelector';
 
 
 class heymo extends Component {

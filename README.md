@@ -11,6 +11,15 @@ HOW TO DEPLOY
 TODO
 ----
 
+Non-tech launch:
+ - icon
+ - Short description
+ - Full description 
+ - Screenshots (3)
+ - Feature graphic
+ 
+
+
 Polishing:
 - fix back area in react-native
 - fix the display of text

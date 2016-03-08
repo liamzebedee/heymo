@@ -7,14 +7,13 @@ import React, {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Text,
   Navigator,
   DatePickerIOS,
   Picker
 } from 'react-native';
 
 import {MainHome} from './MainHome';
-import {NiceButton, NewMoButton, goHome} from './Globals';
+import {NiceButton, NewMoButton, goHome, AppText} from './Globals';
 import {Radio, Option} from '../RadioButton';
 import ExpandingTextInput from '../ExpandingTextInput';
 import {getFriends, getMeForSelectFriends, getUserId, sendMo, remo, forwardMo} from './API'
@@ -24,61 +23,80 @@ import { loadFriends, addContact } from './redux/actions'
 var GiftedSpinner = require('react-native-gifted-spinner');
 var Icon = require('react-native-vector-icons/FontAwesome');
 var Ionicon = require('react-native-vector-icons/Ionicons');
-
+var moment = require('moment');
 
 
 class TimeSelector extends Component {
   constructor(props) {
     super(props);
+
+    this.optionsForTimes = ["1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am", "11am", "midday", "1pm", "2pm", "3pm", "4pm", "beer'o'clock", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "midnight"];
+
+    var now = new Date;
+
     this.state = {
-      date: new Date,
-      pickerValue: ''
+      date: now,
+      minDate: now,
+      pickerValue: this.optionsForTimes[now.getHours()]
     }
 
-    this.optionsForDatetimes = [
-      "in an hour",
-      "in 24 hours",
-      "today at x o'clock",
-      "tomorrow at x o'clock",
-      "tomorrow morning",
-      "tomorrow afternoon",
-      "tomorrow night",
-    ];
-    // this.dateOptions = [
-    //   'tomorrow',
-    //   ''
-    // ];
-    // this.timeOptions = [
-    //   'morning',
-    //   'daytime',
-    //   'night'
-    // ];
-    // <DatePickerIOS
-    //       date={this.state.date}
-    //       mode="date"
-    //       timeZoneOffsetInMinutes={10 * 60}
-    //       onDateChange={this.onDateChange}
-    //     />
-    //     <DatePickerIOS
-    //       date={this.state.date}
-    //       mode="time"
-    //       timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
-    //       onDateChange={this.onDateChange}
-    //       minuteInterval={10}
-    //     />
+    this.optionsForDates = [];
+    const shortenings = {
+      0: 'today',
+      1: 'tomorrow',
+      2: 'in two days',
+      7: 'in a week',
+      14: 'in two weeks'
+    }
+    for(var i = 0; i < 14; i++) {
+      var date = moment(now).add(moment.duration(i, 'd'));
+      var shortening = shortenings[i];
+      if(!shortening) {
+        var format = 'dddd';
+        shortening = date.calendar(null, {
+          sameDay: 'bad error',
+          nextDay: format,
+          nextWeek: format,
+          lastDay: 'bad error',
+          lastWeek: 'bad error',
+          sameElse: '[Next] ' + format
+        });
+      }
+
+      this.optionsForDates.push({ date, shortening });
+    }
+
+    this.onDateChange = this.onDateChange.bind(this);
+  }
+
+  onDateChange(date) {
+    this.setState({date: date});
   }
 
   render() {
     return <View style={{ flex: 1 }}>
-       <Picker
-        style={{ flex: 1}}
+      <AppText>Reveal</AppText>
+      
+      <Picker mode={'dropdown'} style={{ flex: 1}}
         selectedValue={this.state.pickerValue}
         onValueChange={(pickerValue) => this.setState({pickerValue})}>
-        {this.optionsForDatetimes.map((opt) => 
-          <Picker.Item label={opt} value={opt} />
+
+        {this.optionsForDates.map((opt) => 
+          <Picker.Item key={opt.shortening} label={opt.shortening} value={opt.date} />
         )}
-        
+
       </Picker>
+
+       <Picker mode={'dropdown'} style={{ flex: 1}}
+        selectedValue={this.state.pickerValue}
+        onValueChange={(pickerValue) => this.setState({pickerValue})}>
+
+        {this.optionsForTimes.map((opt) => 
+          <Picker.Item key={opt} label={opt} value={opt} />
+        )}
+
+      </Picker>
+
     </View>;
   }
 }

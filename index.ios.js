@@ -32,8 +32,8 @@ var FIRST_PAGE;
 // const FIRST_PAGE = NiceWritingInput;
 // const FIRST_PAGE = ProfileViewSmall;
 // FIRST_PAGE = DebugPage;
-FIRST_PAGE = TimeSelector;
-// FIRST_PAGE = LoginPage;
+// FIRST_PAGE = TimeSelector;
+FIRST_PAGE = LoginPage;
 
 import {MainHome} from './shared/MainHome';
 import {NewMo, NiceWritingInput} from './shared/NewMo';

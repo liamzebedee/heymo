@@ -78,19 +78,20 @@ export async function getUserId(username) {
 
 
 
-export async function getHeymos({ sinceTime }) {
+export async function getHeymos(userId, sinceTime) {
     var user = await getUser()
 
 	try {
-		var params = {
-			userid: user.id
-		}
-		if(sinceTime) params.sinceTime = sinceTime;
+		var api = await getAPI();
 		
-		var data = await apiGet('/forwards/getCurrentMos', params)
-		return data.mos;
+		var res = await api.Forward.Forward_getCurrentMos({
+			userId,
+			sinceTime
+		});
+		return res.obj.mos;
+
 	} catch(err) {
-		// alert(err.message)
+		console.log(err);
 	}
 }
 
@@ -147,18 +148,33 @@ export async function forwardMo({ momentId, revealInterval, to, isRemo }) {
 
 
 
-const SERVER_URL_BASE = "http://heymo1.onwikipedia.org:3000";
-// const SERVER_URL_BASE = "http://0.0.0.0:3000";
+// const SERVER_URL_BASE = "http://heymo1.onwikipedia.org:3000";
+const SERVER_URL_BASE = "http://0.0.0.0:3000";
 const SERVER_URL = SERVER_URL_BASE+"/api";
 
-var Swagger = require('swagger-client');
-var client = null;
 
+
+var _client;
 async function loadAPIClient() {
-	client = await new Swagger({
+	var Swagger = require('swagger-client');
+	_client = await new Swagger({
 		url: SERVER_URL_BASE+'/explorer/swagger.json',
 		usePromise: true
 	});
+
+	// var a = new Swagger({
+	// 	url: SERVER_URL_BASE+'/explorer/swagger.json',
+	// 	usePromise: true
+	// }).then(function(client) {
+		
+	// });
+}
+
+async function getAPI() {
+	if(!_client) {
+		await loadAPIClient();
+	}
+	return _client;
 }
 
 

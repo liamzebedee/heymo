@@ -38,8 +38,8 @@ class MainHome extends Component {
     super(props);
 
     this.state = {
-      receivedHeymos: MomentsStore.getState().all,
-      loading:  MomentsStore.getState().loading,
+      receivedHeymos: [],
+      loading:        MomentsStore.getState().loading,
     };
 
     this._renderItem = this._renderItem.bind(this);
@@ -55,6 +55,8 @@ class MainHome extends Component {
     var self = this;
 
     this.setState({ loading: true });
+    var lastDate = new Date(MomentsStore.getState().all[0].dateReveal);
+    console.log(lastDate);
     MomentsStore.dispatch(loadMoments())
   }
 

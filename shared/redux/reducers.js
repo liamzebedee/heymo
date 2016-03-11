@@ -73,7 +73,10 @@ const moments = (state, action) => {
 }
 
 const MomentsStore = createStore(moments, initialState_moments, withMiddleware);
-persistStore(MomentsStore, {storage: AsyncStorage});
+persistStore(MomentsStore, {storage: AsyncStorage}, function afterRehydrate() {
+  var heymos = MomentsStore.getState().all;
+  console.log("Loaded "+heymos.length+" moments from cache: "+heymos.map((heymo) => heymo.id).join(' '));
+});
 
 
 

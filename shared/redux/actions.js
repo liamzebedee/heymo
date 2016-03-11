@@ -43,11 +43,14 @@ export const addContact = (username, id) => {
 // (actually they are forwards)
 //
 //
-export function loadMoments() {
+export function loadMoments(lastMomentDateLoaded) {
   return (dispatch) => {
-    getHeymos().then((heymos) => {
-      dispatch(momentsLoaded(heymos));
-    })
+    getUser().then((user) => {
+      getHeymos(user.id, lastMomentDateLoaded).then((heymos) => {
+        console.log('Got '+heymos.length+' heymos from server: '+heymos.map((heymo) => heymo.id).join(' '));
+        dispatch(momentsLoaded(heymos));
+      })
+    });
   }
 }
 

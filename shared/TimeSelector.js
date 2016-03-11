@@ -34,12 +34,6 @@ class TimeSelector extends Component {
 
     var now = new Date;
 
-    this.state = {
-      date: now,
-      minDate: now,
-      pickerValue: this.optionsForTimes[now.getHours()]
-    }
-
     this.optionsForDates = [];
     const shortenings = {
       0: 'today',
@@ -66,11 +60,14 @@ class TimeSelector extends Component {
       this.optionsForDates.push({ date, shortening });
     }
 
-    this.onDateChange = this.onDateChange.bind(this);
-  }
+    this.state = {
+      date: now,
+      minDate: now,
 
-  onDateChange(date) {
-    this.setState({date: date});
+      pickedDate: 0,
+      pickedTime: now.getHours()
+    }
+
   }
 
   render() {
@@ -78,21 +75,21 @@ class TimeSelector extends Component {
       <AppText>Reveal</AppText>
       
       <Picker mode={'dropdown'} style={{ flex: 1}}
-        selectedValue={this.state.pickerValue}
-        onValueChange={(pickerValue) => this.setState({pickerValue})}>
+        selectedValue={this.state.pickedDate}
+        onValueChange={(pickedDate) => this.setState({ pickedDate }) }>
 
-        {this.optionsForDates.map((opt) => 
-          <Picker.Item key={opt.shortening} label={opt.shortening} value={opt.date} />
+        {this.optionsForDates.map((opt, i) => 
+          <Picker.Item key={i} label={opt.shortening} value={i} />
         )}
 
       </Picker>
 
        <Picker mode={'dropdown'} style={{ flex: 1}}
-        selectedValue={this.state.pickerValue}
-        onValueChange={(pickerValue) => this.setState({pickerValue})}>
+          selectedValue={this.state.pickedTime}
+          onValueChange={(pickedTime) => this.setState({pickedTime})}>
 
-        {this.optionsForTimes.map((opt) => 
-          <Picker.Item key={opt} label={opt} value={opt} />
+        {this.optionsForTimes.map((opt, i) => 
+          <Picker.Item key={i} label={opt} value={i} />
         )}
 
       </Picker>

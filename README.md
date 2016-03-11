@@ -17,7 +17,6 @@ Non-tech launch:
  - Full description 
  - Screenshots (3)
  - Feature graphic
- 
 
 
 Polishing:
@@ -25,8 +24,7 @@ Polishing:
 - fix the display of text
 - loading for when you are posting text
 - loading for when you are posting 
-- don't duplicate forwards of same moment
-- date picker for interval
+- don't duplicate forwards of same mo
 - remo functionality
 - notifications
 - nicer font sizing for contact send to.

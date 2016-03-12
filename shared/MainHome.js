@@ -48,16 +48,21 @@ class MainHome extends Component {
 
   componentDidMount() {
     MomentsStore.subscribe( () => this.setState(mapStateToProps(MomentsStore.getState())) )
-    this.loadHeymos()
+    // this.loadHeymos()
   }
 
   loadHeymos() {
     var self = this;
 
     this.setState({ loading: true });
-    var lastDate = new Date(MomentsStore.getState().all[0].dateReveal);
-    console.log(lastDate);
-    MomentsStore.dispatch(loadMoments())
+
+    var sinceTime;
+    var allMoments = MomentsStore.getState().all;
+    if(allMoments.length > 0) {
+      sinceTime = allMoments[0].dateCreated;
+    }
+    console.log(sinceTime);
+    MomentsStore.dispatch(loadMoments(sinceTime))
   }
 
   _renderItem(item) {

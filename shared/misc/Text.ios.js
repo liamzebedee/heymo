@@ -5,7 +5,7 @@ import React, {
 
 class Text extends Component {
 	render() {
-		return <Text {...this.props} style={[{ fontFamily: 'Helvetica Neue' }, this.props.style]}/>;
+		return <React.Text {...this.props} style={[{ fontFamily: 'Helvetica Neue' }, this.props.style]}/>;
 	}
 }
 

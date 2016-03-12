@@ -53,9 +53,9 @@ export async function signInUser({ username, password }) {
 		setAccessToken(res.id)
 	} catch(err) {
 		console.log(err)
-		if(err.details.code === "LOGIN_FAILED") {
-			throw new Error("Login failed: wrong username/password?")
-		}
+		// if(err.details.code === "LOGIN_FAILED") {
+		// 	throw new Error("Login failed: wrong username/password?")
+		// }
 		throw err
 	}
 }
@@ -68,9 +68,10 @@ export async function getUserId(username) {
 	try {
 		var data = await apiGet("/users/findOne", { "where": { "username": username } })
 	} catch(err) {
-		if(err.details.code === 'MODEL_NOT_FOUND') {
-			throw new Error("No-one was found for that username!")
-		}
+
+		// if(err.details && err.details.code === 'MODEL_NOT_FOUND') {
+		// 	throw new Error("No-one was found for that username!")
+		// }
 		throw err;
 	}
 	return data.id
@@ -88,6 +89,7 @@ export async function getHeymos(userId, sinceTime) {
 			userId,
 			sinceTime
 		});
+		console.log(res);
 		return res.obj.mos;
 
 	} catch(err) {

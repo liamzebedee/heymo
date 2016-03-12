@@ -57,11 +57,12 @@ const initialState_moments = {
   loading: false
 };
 
+
 const moments = (state, action) => {
   switch (action.type) {
     case 'momentsLoaded':
       return Object.assign({}, state, {
-        all: action.moments,
+        all: state.all.concat(action.moments),
         loading: false
       });
       break;

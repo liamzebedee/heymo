@@ -77,7 +77,7 @@ class LoginPage extends Component {
     (async function() {
       var user = await getUser();
       if(user) {
-        self.signIn()
+        self.navHome()
       }
     })();
   }

@@ -28,6 +28,7 @@
 		5B3D2B490E9A475E9D04E508 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E82FCB693A34458584915846 /* Ionicons.ttf */; };
 		5F505206E26D4C45B6BC6024 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03DBBD1401CB447B981EBC73 /* MaterialIcons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9D05DDE51C955DE1006EA528 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D05DDDD1C955DBC006EA528 /* libRCTPushNotification.a */; };
 		9D2527BB1C6E263500887FB3 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D2527B91C6E261800887FB3 /* libRNImagePicker.a */; };
 		9D4BAF8C1C6DC826004CD2EB /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D4BAF841C6DC826004CD2EB /* Entypo.ttf */; };
 		9D4BAF8D1C6DC826004CD2EB /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D4BAF851C6DC826004CD2EB /* EvilIcons.ttf */; };
@@ -120,6 +121,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		9D05DDDC1C955DBC006EA528 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D05DDD31C955DBB006EA528 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
 		9D2527B81C6E261800887FB3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9D2527AA1C6E261700887FB3 /* RNImagePicker.xcodeproj */;
@@ -164,6 +172,7 @@
 		69AD8D3A14C342BCA27DEAA5 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		9D05DDD31C955DBB006EA528 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		9D2527AA1C6E261700887FB3 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		9D4BAF841C6DC826004CD2EB /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
 		9D4BAF851C6DC826004CD2EB /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
@@ -191,6 +200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D05DDE51C955DE1006EA528 /* libRCTPushNotification.a in Frameworks */,
 				9D2527BB1C6E263500887FB3 /* libRNImagePicker.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -315,6 +325,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				9D05DDD31C955DBB006EA528 /* RCTPushNotification.xcodeproj */,
 				9D2527AA1C6E261700887FB3 /* RNImagePicker.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -358,6 +369,14 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* heymo.app */,
 				00E356EE1AD99517003FC87E /* heymoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9D05DDD41C955DBB006EA528 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D05DDDD1C955DBC006EA528 /* libRCTPushNotification.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -461,7 +480,12 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = LD9GUKP5F4;
+						DevelopmentTeam = 2S6NXP6BKG;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -496,6 +520,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = 9D05DDD41C955DBB006EA528 /* Products */;
+					ProjectRef = 9D05DDD31C955DBB006EA528 /* RCTPushNotification.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -603,6 +631,13 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D05DDDD1C955DBC006EA528 /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = 9D05DDDC1C955DBC006EA528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		9D2527B91C6E261800887FB3 /* libRNImagePicker.a */ = {
@@ -771,10 +806,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 				);
 				INFOPLIST_FILE = heymo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = co.liamz.heymo;
 				PRODUCT_NAME = heymo;
 				PROVISIONING_PROFILE = "";
 			};
@@ -791,10 +828,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 				);
 				INFOPLIST_FILE = heymo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = co.liamz.heymo;
 				PRODUCT_NAME = heymo;
 				PROVISIONING_PROFILE = "";
 			};

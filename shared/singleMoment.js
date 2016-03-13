@@ -17,9 +17,15 @@ import React, {
 var Button = require('react-native-button');
 var Icon = require('react-native-vector-icons/FontAwesome');
 var moment = require('moment');
-import {AppText, CancelButton, colours} from './Globals';
+import {
+	AppText, 
+	CancelButton, 
+	colours,
+	ArrowRightButton
+} from './Globals';
 import {weirdImage, niceImage} from './_sampleData';
 import {SelectFriends} from './SelectFriends'
+import TimeSelector from './TimeSelector';
 import Router from 'react-native-simple-router'; 
 import { forwardMo, heartMo, reMo } from './API';
 
@@ -122,9 +128,20 @@ class SingleMoment extends Component {
 		var self = this;
 		this.props.toRoute({
 			name: 'Remo',
-			component: SelectFriends,
+			component: TimeSelector,
 			leftCorner: CancelButton,
-			rightCorner: View,
+			rightCorner: (props) => <ArrowRightButton onPress={() => {
+				this.props.toRoute({
+					component: SelectFriends,
+					leftCorner: View,
+					rightCorner: View,
+		     		sceneConfig: Navigator.SceneConfigs.FloatFromRight,
+		     		passProps: {
+		     			remo: true,
+		     			moment: this.props.moment
+		     		}
+				});
+			}}/>,
      		sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
      		passProps: {
      			remo: true, 

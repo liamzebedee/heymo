@@ -151,7 +151,8 @@ export async function forwardMo({ momentId, revealInterval, to, isRemo }) {
 
 
 // const SERVER_URL_BASE = "http://heymo1.onwikipedia.org:3000";
-const SERVER_URL_BASE = "http://0.0.0.0:3000";
+// const SERVER_URL_BASE = "http://0.0.0.0:3000";
+const SERVER_URL_BASE = "http://172.19.185.139:3000";
 const SERVER_URL = SERVER_URL_BASE+"/api";
 
 

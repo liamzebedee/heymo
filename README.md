@@ -25,9 +25,16 @@ Polishing:
 - loading for when you are posting text
 - loading for when you are posting 
 - don't duplicate forwards of same mo
+
 - remo functionality
+
 - notifications
+
 - nicer font sizing for contact send to.
+
+
+
+
 
 
 I would like to post: 

@@ -30,6 +30,27 @@ class TimeSelector extends Component {
   constructor(props) {
     super(props);
 
+    var self = this;
+
+    this.props.setRightProps({
+      onPress: function() {
+        this.props.toRoute({
+          component: SelectFriends,
+          leftCorner: CancelButton,
+          rightCorner: View,
+          sceneConfig: Navigator.SceneConfigs.FloatFromRight,
+          passProps: {
+            remo: true,
+            moment: Object.assign(this.props.moment, {
+              pickedDate: self.state.pickedDate,
+              pickedTime: self.state.pickedTime
+            })
+          }
+        });
+
+      }
+    });
+
     this.optionsForTimes = ["1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am", "11am", "midday", "1pm", "2pm", "3pm", "4pm", "beer'o'clock", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "midnight"];
 
     var now = new Date;
@@ -64,7 +85,7 @@ class TimeSelector extends Component {
       date: now,
       minDate: now,
 
-      pickedDate: 0,
+      pickedDate: this.optionsForDates[1],
       pickedTime: now.getHours()
     }
 

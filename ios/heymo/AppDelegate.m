@@ -20,7 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   auto onDevice = true;
-//  onDevice = false;
+  onDevice = false;
   
   NSURL *jsCodeLocation;
 

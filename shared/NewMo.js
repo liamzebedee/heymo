@@ -96,6 +96,10 @@ class NewMo extends Component {
     });
   }
 
+  pickTime() {
+    
+  }
+
   sendMo(data) {
     this.props.toRoute({
       name: "Send mo'",
